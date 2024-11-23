@@ -22,31 +22,37 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Loader2, LockIcon, MailIcon } from "lucide-react";
+import { PostLogin } from "./action";
 
 export function FormLogin() {
   const router = useRouter();
-
   const [loading, setLoading] = useState(false);
   const FormSchema = z.object({
-    username: z.string().min(6, {
-      message: "Username is required",
+    email: z.string().min(6, {
+      message: "Email is required",
     }),
     password: z.string().min(6, {
       message: "Password min 8 character",
     }),
   });
 
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    setLoading(true);
+    await PostLogin(data).then((res) => {
+      if (!res.success) {
+        setLoading(false);
+        alert(res.message);
+        return;
+      } else {
+        setLoading(false);
+        router.push("/");
+      }
+    });
+  };
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
-
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    setLoading(true);
-    console.log(data);
-    setLoading(false);
-    router.push("/dashboard");
-  };
-
   return (
     <Card className="mx-auto max-w-sm w-full">
       <CardHeader>
@@ -63,13 +69,13 @@ export function FormLogin() {
             >
               <FormField
                 control={form.control}
-                name="username"
+                name="email"
                 render={({ field }) => (
                   <FormItem className="mb-4 flex flex-col">
                     <div className="flex items-center gap-3">
                       <MailIcon />
                       <FormControl>
-                        <Input placeholder="Username" {...field} />
+                        <Input placeholder="Email" {...field} />
                       </FormControl>
                     </div>
                     <FormMessage className="text-center" />

@@ -27,3 +27,10 @@ export type FormState =
       message?: string
     }
   | undefined
+
+  export type ActionResponseType = {
+    success: boolean;
+    message: string;
+    admin?: boolean;
+    data?: any;
+  };

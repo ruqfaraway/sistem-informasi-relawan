@@ -1,7 +1,14 @@
-
+"use server";
+import { getSession } from "@/lib/session";
 import { FormLogin } from "./form";
+import { redirect } from "next/navigation";
 
-export default function Page() {
+export default async function Page() {
+  const session = await getSession();
+  // console.log(session, "ini session");
+  if (session.isLoggedIn) {
+    redirect("/");
+  }
   return (
     <div className="flex h-screen w-full items-center justify-center px-4">
       <FormLogin />

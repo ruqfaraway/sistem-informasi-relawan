@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int            @id @default(autoincrement())
+  name       String?
+  email      String         @db.VarChar
+  password   String         @db.VarChar
+  unit_id    String?
+  role_id    Int
+  created_at DateTime       @default(now()) @db.Timestamp(6)
+  updated_at DateTime       @default(now()) @db.Timestamp(6)
+  deleted_at DateTime?      @db.Timestamp(6)
+  role       Role           @relation(fields: [role_id], references: [id])
+  unit       VolunteerUnit? @relation(fields: [unit_id], references: [id])
+
+  @@map("users")
+}
+
+model Role {
+  id          Int     @id @default(autoincrement())
+  role_name   String  @unique
+  description String?
+  users       User[]
+
+  @@map("roles")
+}
+
+model VolunteerUnit {
+  id         String      @id @default(uuid())
+  name       String
+  builder    String
+  birth_date DateTime
+  created_at DateTime    @default(now()) @db.Timestamp(6)
+  updated_at DateTime    @default(now()) @db.Timestamp(6)
+  deleted_at DateTime?   @db.Timestamp(6)
+  users      User[]
+  volunteers Volunteer[]
+
+  @@map("volunteer_units")
+}
+
+model Volunteer {
+  volunteer_id      String         @id @map("nrp")
+  volunteer_type_id String
+  unit_id           String
+  name              String
+  born_place        String
+  birth_date        DateTime
+  gender            Gender
+  gol_dar           BloodType
+  education_id      String
+  occupation_id     String
+  address           String
+  phone             String
+  email             String         @unique
+  status            Status
+  join_date         DateTime
+  photo             String?
+  position          String
+  period            String
+  isOfficer         Boolean        @default(false)
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+  deleted_at        DateTime?      @db.Timestamp(6)
+  education         EducationLevel @relation(fields: [education_id], references: [id])
+  occupation        Occupation     @relation(fields: [occupation_id], references: [id])
+  unit              VolunteerUnit  @relation(fields: [unit_id], references: [id])
+  type              VolunteerType  @relation(fields: [volunteer_type_id], references: [id])
+
+  @@map("volunteers")
+}
+
+model VolunteerType {
+  id             String      @id @default(uuid())
+  volunteer_type String      @unique
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
+  deleted_at     DateTime?   @db.Timestamp(6)
+  volunteers     Volunteer[]
+
+  @@map("volunteer_types")
+}
+
+model EducationLevel {
+  id         String      @id @default(uuid())
+  education  String      @unique
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  deleted_at DateTime?   @db.Timestamp(6)
+  volunteers Volunteer[]
+
+  @@map("education_levels")
+}
+
+model Occupation {
+  id         String      @id @default(uuid())
+  occupation String      @unique
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  deleted_at DateTime?   @db.Timestamp(6)
+  volunteers Volunteer[]
+
+  @@map("occupations")
+}
+
+enum Gender {
+  M
+  F
+}
+
+enum BloodType {
+  A
+  B
+  AB
+  O
+  Unknown
+}
+
+enum Status {
+  active
+  inactive
+}

@@ -10,7 +10,6 @@ export const loginPost = async (data: loginData) => {
   const user = await prisma.user.findFirst({ where: { email: data.email } });
   if (!user) return false;
   const checkPassword = await bcrypt.compare(data.password, user.password);
-  // console.log(checkPassword, 'ini checkpassword');
   if (checkPassword) {
     return user;
   } else {

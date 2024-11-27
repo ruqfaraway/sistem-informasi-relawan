@@ -79,7 +79,8 @@ model Volunteer {
 
 model VolunteerType {
   id             String      @id @default(uuid())
-  volunteer_type String      @unique
+  code           String      @unique
+  volunteer_type String
   created_at     DateTime    @default(now())
   updated_at     DateTime    @updatedAt
   deleted_at     DateTime?   @db.Timestamp(6)
@@ -90,7 +91,8 @@ model VolunteerType {
 
 model EducationLevel {
   id         String      @id @default(uuid())
-  education  String      @unique
+  code       String      @unique
+  education  String
   created_at DateTime    @default(now())
   updated_at DateTime    @updatedAt
   deleted_at DateTime?   @db.Timestamp(6)
@@ -101,7 +103,8 @@ model EducationLevel {
 
 model Occupation {
   id         String      @id @default(uuid())
-  occupation String      @unique
+  code       String      @unique
+  occupation String
   created_at DateTime    @default(now())
   updated_at DateTime    @updatedAt
   deleted_at DateTime?   @db.Timestamp(6)

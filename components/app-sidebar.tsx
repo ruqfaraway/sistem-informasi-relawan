@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 
 // import { SearchForm } from "@/components/search-form";
@@ -15,6 +16,9 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
+import { PostLogout } from "@/app/(auth)/login/action";
+import Link from "next/link";
+
 // This is sample data.
 const data = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
@@ -25,15 +29,15 @@ const data = {
       items: [
         {
           title: "Unit",
-          url: "#",
+          url: "/unit",
         },
         {
           title: "Pendidikan",
-          url: "#",
+          url: "/education",
         },
         {
           title: "Pekerjaan",
-          url: "#",
+          url: "/occupation",
         },
       ],
     },
@@ -43,12 +47,11 @@ const data = {
       items: [
         {
           title: "Manajemen Relawan",
-          url: "#",
-          isActive: true,
+          url: "/volunteer-management",
         },
         {
           title: "Manajemen Penugasan",
-          url: "#",
+          url: "/assignment-management",
           // isActive: true,
         },
         // {
@@ -153,6 +156,9 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const handleLogout = async () => {
+    await PostLogout();
+  };
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -168,8 +174,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
-                      <a href={item.url}>{item.title}</a>
+                    <SidebarMenuButton asChild>
+                      <Link href={item.url}>{item.title}</Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -177,6 +183,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarGroupContent>
           </SidebarGroup>
         ))}
+        <SidebarGroup>
+          <SidebarGroupLabel>Logout</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/" onClick={handleLogout}>
+                    Logout
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

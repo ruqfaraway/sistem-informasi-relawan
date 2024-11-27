@@ -3,6 +3,7 @@ import { ActionResponseType } from "@/lib/definitions";
 import { getSession } from "@/lib/session";
 import { ValidateEmail } from "@/lib/validate-email";
 import { loginPost } from "@/model/user.data";
+import { redirect } from "next/navigation";
 
 interface login {
  email: string;
@@ -11,6 +12,7 @@ interface login {
 
 export const PostLogin = async (data: login): Promise<ActionResponseType> => {
  const session = await getSession();
+ // console.log(data, "ini data");
  try {
   const checkEmail = ValidateEmail(data.email);
   if (checkEmail) {
@@ -42,3 +44,10 @@ export const PostLogin = async (data: login): Promise<ActionResponseType> => {
   message: "Login success",
  }
 }
+
+export const PostLogout = async (url?: string) => {
+ const session = await getSession();
+ session.destroy();
+ if (url) redirect(url);
+ redirect("/login");
+};

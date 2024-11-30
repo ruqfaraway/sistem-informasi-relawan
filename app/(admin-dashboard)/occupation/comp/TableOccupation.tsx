@@ -1,18 +1,21 @@
 "use client";
 import React from "react";
-import { columns } from "./columns";
+
 import { DataTable } from "@/components/MainTable/MainTable";
-interface EducationPageProps {
+import { columns } from "./columns";
+
+interface OccupationPageProps {
   dataSource: data[];
 }
 interface data {
   id: string;
   code: string;
-  education: string;
+  occupation: string;
 }
-
-const TableEducation: React.FC<EducationPageProps> = ({ dataSource }) => {
+const TableOccupation: React.FC<OccupationPageProps> = ({
+  dataSource = [],
+}) => {
   return <DataTable columns={columns} data={dataSource} />;
 };
 
-export default TableEducation;
+export default TableOccupation;

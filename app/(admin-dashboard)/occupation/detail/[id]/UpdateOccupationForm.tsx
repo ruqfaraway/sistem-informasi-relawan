@@ -1,6 +1,5 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -14,10 +13,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createOccupation } from "../actions";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { UpdateOccupation } from "../../actions";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -30,36 +29,44 @@ const formSchema = z.object({
     }),
 });
 
-const AddOccupationForm = () => {
-  const { toast } = useToast();
+const UpdateOccupationForm = ({
+  initialValues,
+}: {
+  initialValues: {
+    name: string;
+    code: string;
+  };
+}) => {
   const router = useRouter();
+  const params = useParams();
   const [loading, setLoading] = useState(false);
+  const id = params.id as string;
+  const { toast } = useToast();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      code: "",
+      name: initialValues.name,
+      code: initialValues.code,
     },
   });
 
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const toBeSubmitted = {
+    setLoading(true);
+    await UpdateOccupation(id, {
       name: values.name,
       code: values.code.toLowerCase(),
-    };
-    setLoading(true);
-    await createOccupation(toBeSubmitted)
+    })
       .then((res) => {
-        if (res.success === true) {
+        if (res.success) {
           form.reset();
           toast({
             title: "Success",
-            description: "Occupation added successfully",
+            description: "Occupation updated successfully.",
           });
-          router.push("/occupation");
         }
+        router.push("/occupation");
       })
       .catch((error) => {
         toast({
@@ -103,12 +110,13 @@ const AddOccupationForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">
-          {loading ? <Loader2 className="animate-spin" /> : "Submit"}
+        {/* {loading && <div>Loading...</div>} */}
+        <Button type="submit" disabled={loading}>
+          {loading ? "Loading..." : "Submit"}
         </Button>
       </form>
     </Form>
   );
 };
 
-export default AddOccupationForm;
+export default UpdateOccupationForm;

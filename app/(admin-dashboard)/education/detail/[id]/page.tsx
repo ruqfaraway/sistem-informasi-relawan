@@ -11,6 +11,8 @@ const DetailPage = async ({
 }) => {
   const { data } = await getDetailEducation(params.id);
 
+  console.log(data, 'data')
+
   return (
     <>
       <div>DetailPage</div>

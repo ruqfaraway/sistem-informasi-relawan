@@ -1,7 +1,8 @@
-'use client';
+"use client";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
+import DeleteButton from "./DeleteButton";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -36,7 +37,7 @@ export const columns: ColumnDef<Education>[] = [
           <Link href={`/education/detail/${row.original.id}`}>
             <Button>Edit</Button>
           </Link>
-          <Button>Delete</Button>
+          <DeleteButton id={row.original.id} />
         </div>
       );
     },

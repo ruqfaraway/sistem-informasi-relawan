@@ -23,9 +23,11 @@ import {
 } from "@/components/ui/form";
 import { Loader2, LockIcon, MailIcon } from "lucide-react";
 import { PostLogin } from "./action";
+import { useToast } from "@/hooks/use-toast";
 
 export function FormLogin() {
   const router = useRouter();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const FormSchema = z.object({
     email: z.string().min(6, {
@@ -41,10 +43,18 @@ export function FormLogin() {
     await PostLogin(data).then((res) => {
       if (!res.success) {
         setLoading(false);
-        alert(res.message);
-        return;
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: res.message,
+        });
+        return res;
       } else {
         setLoading(false);
+        toast({
+          title: "Login Success",
+          description: "Welcome back",
+        });
         router.push("/");
       }
     });

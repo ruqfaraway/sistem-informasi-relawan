@@ -1,19 +1,21 @@
 'use server'
 import { ActionResponseType } from "@/lib/definitions";
 import { getSession } from "@/lib/session";
-import { createEducation, deleteEducationData, getDetailEducationData, getEducationData, updateEducationData } from "@/model/education.data";
+import { createOccupationData, deleteOccupationData, getDetailOccupationData, getOccupationData, updateOccupationData } from "@/model/occupation.data";
 import { revalidatePath } from "next/cache";
 
-interface education {
+interface occupation {
  name: string;
  code: string;
 }
 
-export const PostEducation = async (data: education): Promise<ActionResponseType> => {
+// create
+
+export const createOccupation = async (data: occupation): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
   if (session.superAdmin === true) {
-   await createEducation({
+   await createOccupationData({
     name: data.name,
     code: data.code,
    });
@@ -35,11 +37,12 @@ export const PostEducation = async (data: education): Promise<ActionResponseType
  }
 };
 
-export const getDataEducation = async (): Promise<ActionResponseType> => {
+//read
+export const getDataOccupation = async (): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
   if (session.superAdmin === true) {
-   const data = await getEducationData();
+   const data = await getOccupationData();
    return {
     success: true,
     message: "success get data",
@@ -58,16 +61,18 @@ export const getDataEducation = async (): Promise<ActionResponseType> => {
  }
 }
 
-export const getDetailEducation = async (id: string): Promise<ActionResponseType> => {
+//update
+
+export const getDetailOccupation = async (id: string): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
   if (session.superAdmin === true) {
-   const data = await getDetailEducationData(id);
+   const data = await getDetailOccupationData(id);
    return {
     success: true,
     message: "success get data",
     data: {
-     name: data?.education,
+     name: data?.occupation,
      code: data?.code,
     },
    };
@@ -84,15 +89,17 @@ export const getDetailEducation = async (id: string): Promise<ActionResponseType
  }
 }
 
-export const UpdateEducation = async (id: string, data: education): Promise<ActionResponseType> => {
+// update
+
+export const UpdateOccupation = async (id: string, data: occupation): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
   if (session.superAdmin === true) {
-   await updateEducationData(id, {
+   await updateOccupationData(id, {
     name: data.name,
     code: data.code,
    })
-   revalidatePath("/education");
+   revalidatePath("/occupation");
    return {
     success: true,
     message: "success update data",
@@ -110,12 +117,14 @@ export const UpdateEducation = async (id: string, data: education): Promise<Acti
  }
 }
 
-export const DeleteEducation = async (id: string): Promise<ActionResponseType> => {
+//delete
+
+export const DeleteOccupation = async (id: string): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
   if (session.superAdmin === true) {
-   await deleteEducationData(id);
-   revalidatePath("/education");
+   await deleteOccupationData(id);
+   revalidatePath("/occupation");
    return {
     success: true,
     message: "success delete data",

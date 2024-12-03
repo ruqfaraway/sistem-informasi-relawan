@@ -14,10 +14,10 @@ export type Education = {
 
 export const columns: ColumnDef<Education>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
+    accessorKey: "no",
+    header: "No.",
     cell: ({ row }) => {
-      return <div className="text-right font-medium">{row.index + 1}</div>;
+      return <div className="text-left font-medium">{row.index + 1}</div>;
     },
   },
   {

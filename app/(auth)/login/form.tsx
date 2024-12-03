@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -26,7 +25,6 @@ import { PostLogin } from "./action";
 import { useToast } from "@/hooks/use-toast";
 
 export function FormLogin() {
-  const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const FormSchema = z.object({
@@ -41,22 +39,18 @@ export function FormLogin() {
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     setLoading(true);
     await PostLogin(data).then((res) => {
-      if (!res.success) {
-        setLoading(false);
+      if (res.success) {
         toast({
-          variant: "destructive",
-          title: "Login Failed",
+          title: "Success",
           description: res.message,
         });
-        return res;
       } else {
-        setLoading(false);
         toast({
-          title: "Login Success",
-          description: "Welcome back",
+          title: "Error",
+          description: res.message,
         });
-        router.push("/");
       }
+      setLoading(false);
     });
   };
 
@@ -67,7 +61,7 @@ export function FormLogin() {
     <Card className="mx-auto max-w-sm w-full">
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>SIlahkan masuk untuk melanjutkan</CardDescription>
+        <CardDescription>Silahkan masuk untuk melanjutkan</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">

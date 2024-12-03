@@ -5,6 +5,8 @@ import { ValidateEmail } from "@/lib/validate-email";
 import { loginPost } from "@/model/user.data";
 import { redirect } from "next/navigation";
 
+
+
 interface login {
  email: string;
  password: string;
@@ -25,6 +27,10 @@ export const PostLogin = async (data: login): Promise<ActionResponseType> => {
     session.email = user.email;
     session.name = user.name;
     await session.save();
+    return {
+     success: true,
+     message: "Login success",
+    }
    } else {
     return {
      success: false,

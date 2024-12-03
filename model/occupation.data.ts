@@ -13,6 +13,13 @@ export const getOccupationData = async () => {
  return data;
 };
 
+export const getOccupationAll = async () => {
+ const data = await prisma.occupation.findMany();
+ return data;
+};
+
+
+
 // Create
 export const createOccupationData = async (data: occupation) => {
  const div: Prisma.OccupationCreateInput = {

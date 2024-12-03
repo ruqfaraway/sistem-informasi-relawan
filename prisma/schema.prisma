@@ -47,36 +47,62 @@ model VolunteerUnit {
 }
 
 model Volunteer {
-  volunteer_id      String         @id @map("nrp")
+  id                String         @id @default(uuid())
+  volunteer_id      String         
   volunteer_type_id String
   unit_id           String
+  religion_id       String
+  education_id      String
+  occupation_id     String
+  position_id       String
   name              String
   born_place        String
   birth_date        DateTime
   gender            Gender
-  gol_dar           BloodType
-  education_id      String
-  occupation_id     String
+  blood_type        BloodType
   address           String
   phone             String
   email             String         @unique
   status            Status
   join_date         DateTime
   photo             String?
-  position          String
-  period            String
+  period            String?
   isOfficer         Boolean        @default(false)
   created_at        DateTime       @default(now())
   updated_at        DateTime       @updatedAt
   deleted_at        DateTime?      @db.Timestamp(6)
+  religion          Religion       @relation(fields: [religion_id], references: [id])
   education         EducationLevel @relation(fields: [education_id], references: [id])
   occupation        Occupation     @relation(fields: [occupation_id], references: [id])
   unit              VolunteerUnit  @relation(fields: [unit_id], references: [id])
   type              VolunteerType  @relation(fields: [volunteer_type_id], references: [id])
-
+  position          Position       @relation(fields: [position_id], references: [id])
   @@map("volunteers")
 }
 
+model Religion {
+  id         String      @id @default(uuid())
+  code       String      @unique
+  religion   String
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  deleted_at DateTime?   @db.Timestamp(6)
+  volunteers Volunteer[]
+
+  @@map("religions")
+}
+
+model Position {
+  id         String      @id @default(uuid())
+  code       String      @unique
+  position   String
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  deleted_at DateTime?   @db.Timestamp(6)
+  volunteers Volunteer[]
+
+  @@map("positions")
+}
 model VolunteerType {
   id             String      @id @default(uuid())
   code           String      @unique

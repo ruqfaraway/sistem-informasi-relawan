@@ -13,6 +13,11 @@ export const getEducationData = async () => {
  return data;
 };
 
+export const getEducationAll = async () => {
+ const data = await prisma.educationLevel.findMany();
+ return data;
+};
+
 // Create
 export const createEducation = async (data: education) => {
  const div: Prisma.EducationLevelCreateInput = {

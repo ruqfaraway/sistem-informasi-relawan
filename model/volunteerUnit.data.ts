@@ -41,3 +41,8 @@ export const createUserAndUnitVolunteer = (data: createUser,) => {
 export const getUnitVolunteer = async () => {
  return await prisma.volunteerUnit.findMany();
 }
+
+//get all
+export const getUnitVolunteerAll = async () => {
+ return await prisma.volunteerUnit.findMany();
+}

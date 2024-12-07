@@ -150,7 +150,7 @@ async function main() {
  await Promise.all(positions)
  await Promise.all(religions)
  await Promise.all(volunteerTypes)
- console.log('Seed success')
+ console.log('Seed successfull')
 }
 main()
  .then(async () => {

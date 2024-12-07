@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 // import { createOccupation } from "../actions";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import {
@@ -35,7 +35,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { NewDatePicker } from "@/components/NewDatePicker/NewDatePicker";
-import { createVolunteer } from "../actions";
+import { UpdateVolunteer } from "../../actions";
 
 const formSchema = z.object({
   volunteer_id: z.string().min(10).max(20),
@@ -109,14 +109,15 @@ interface VolunteerData {
   address: string;
   phone: string;
   email: string;
-  status: Status;
   join_date: Date;
   photo?: string;
-  period?: string;
+  period?: string | undefined;
   isOfficer: boolean;
+  status: Status;
 }
 
-const AddVolunteerForm = ({
+const UpdateVolunteerForm = ({
+  initialValues,
   educationList,
   occupationList,
   positionList,
@@ -124,6 +125,7 @@ const AddVolunteerForm = ({
   volunteerTypeList,
   religionList,
 }: {
+  initialValues: VolunteerData;
   educationList: educationList[];
   occupationList: occupationList[];
   positionList: positionList[];
@@ -133,12 +135,15 @@ const AddVolunteerForm = ({
 }) => {
   const { toast } = useToast();
   const router = useRouter();
+  const params = useParams();
   const [loading, setLoading] = useState(false);
+  const id = params.id as string;
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      ...initialValues,
+      status: initialValues.status === "active" ? true : false,
     },
   });
 
@@ -166,7 +171,7 @@ const AddVolunteerForm = ({
       period: values.period,
       isOfficer: values.isOfficer,
     } as VolunteerData;
-    await createVolunteer({ data: toBeSubmitted })
+    await UpdateVolunteer({ id, data: toBeSubmitted })
       .then((res) => {
         if (res.success) {
           toast({
@@ -615,7 +620,7 @@ const AddVolunteerForm = ({
                   Cancel
                 </Button>
                 <Button type="submit">
-                  {loading ? <Loader2 className="animate-spin" /> : "Submit"}
+                  {loading ? <Loader2 className="animate-spin" /> : "Update"}
                 </Button>
               </div>
             </CardFooter>
@@ -626,4 +631,4 @@ const AddVolunteerForm = ({
   );
 };
 
-export default AddVolunteerForm;
+export default UpdateVolunteerForm;

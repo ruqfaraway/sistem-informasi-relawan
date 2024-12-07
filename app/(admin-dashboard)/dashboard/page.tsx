@@ -6,6 +6,9 @@ export default async function Page() {
   if (session.isLoggedIn === false) {
     redirect("/login");
   }
+  if (!session.superAdmin) {
+    redirect("/user-dashboard");
+  }
 
   return (
     <>

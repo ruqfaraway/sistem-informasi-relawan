@@ -6,7 +6,11 @@ import { redirect } from "next/navigation";
 export default async function Page() {
   const session = await getSession();
   if (session.isLoggedIn) {
-    redirect("/");
+    if (session.superAdmin) {
+      redirect("/");
+    } else {
+      redirect("/user-dashboard");
+    }
   }
   return (
     <div className="flex h-screen w-full items-center justify-center px-4">

@@ -1,27 +1,58 @@
-"use client"
+"use client";
 
-import { ColumnDef } from "@tanstack/react-table"
+import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
+import DeleteButton from "./DeleteButton";
+
+// import DeleteButton from "./DeleteButton";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Volunteers = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
+export type VolunteersType = {
+  id: string;
+  name: string;
+  position_id: string;
+  unit_id: string;
+  occupation_id: string;
+};
 
-export const columns: ColumnDef<Volunteers>[] = [
+export const columns: ColumnDef<VolunteersType>[] = [
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "no",
+    header: "No",
+    cell: ({ row }) => {
+      return <div className="text-left font-medium">{row.index + 1}</div>;
+    },
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
+    accessorKey: "position_id",
+    header: "Posisi",
   },
-]
+  {
+    accessorKey: "unit_id",
+    header: "Unit",
+  },
+  {
+    accessorKey: "occupation_id",
+    header: "Pekerjaan",
+  },
+  {
+    accessorKey: "action",
+    header: "Action",
+    cell: ({ row }) => {
+      return (
+        <div className="flex justify-center space-x-4">
+          <Link href={`/volunteer-management/detail/${row.original.id}`}>
+            <Button>Edit</Button>
+          </Link>
+          <DeleteButton id={row.original.id} />
+        </div>
+      );
+    },
+  },
+];

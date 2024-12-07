@@ -14,12 +14,10 @@ interface login {
 
 export const PostLogin = async (data: login): Promise<ActionResponseType> => {
  const session = await getSession();
- // console.log(data, "ini data");
  try {
   const checkEmail = ValidateEmail(data.email);
   if (checkEmail) {
    const user = await loginPost(data);
-   // console.log(user, "ini user");
    if (user) {
     session.isLoggedIn = true;
     session.user_id = user.id.toString();

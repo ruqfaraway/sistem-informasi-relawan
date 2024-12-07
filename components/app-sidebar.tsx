@@ -49,11 +49,11 @@ const data = {
           title: "Manajemen Relawan",
           url: "/volunteer-management",
         },
-        {
-          title: "Manajemen Penugasan",
-          url: "/assignment-management",
-          // isActive: true,
-        },
+        // {
+        //   title: "Manajemen Penugasan",
+        //   url: "/assignment-management",
+        //   // isActive: true,
+        // },
         // {
         //   title: "Rendering",
         //   url: "#",

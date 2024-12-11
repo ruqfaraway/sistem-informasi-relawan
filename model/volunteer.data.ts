@@ -200,3 +200,51 @@ export const getVolunteerData = async () => {
  })
  return datas;
 }
+
+export const getVolunteerDataByUnit = async (unit_id: string | undefined) => {
+ const data = await prisma.volunteer.findMany({
+  where: {
+   unit_id: unit_id,
+  },
+  include: {
+   type: true,
+   unit: true,
+   religion: true,
+   education: true,
+   occupation: true,
+   position: true,
+  },
+ });
+ const datas = data.map((d) => {
+  return {
+   id: d.id,
+   nrp: d.volunteer_id,
+   volunteer_type_id: d.type.id,
+   unit_id: d.unit.name,
+   religion_id: d.religion.religion,
+   education_id: d.education.education,
+   occupation_id: d.occupation.occupation,
+   position_id: d.position.position,
+   name: d.name,
+   address: d.address,
+   birth_date: d.birth_date,
+  }
+ })
+ return datas;
+}
+
+export const getTotalVolunteers = async () => {
+ const data = await prisma.volunteer.count();
+ return data;
+}
+
+export const getTotalVolunteersByUnit = async (unit_id: string | undefined) => {
+ const data = await prisma.volunteer.count({
+  where: {
+   unit_id: unit_id,
+  },
+ });
+ return data;
+}
+
+

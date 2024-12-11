@@ -10,12 +10,26 @@ interface education {
 
 export const getEducationData = async () => {
  const data = await prisma.educationLevel.findMany();
- return data;
+ const datas = data.map((d) => {
+  return {
+   id: d.id,
+   education: d.education,
+   code: d.code,
+  };
+ });
+ return datas;
 };
 
 export const getEducationAll = async () => {
  const data = await prisma.educationLevel.findMany();
- return data;
+ const datas = data.map((d) => {
+  return {
+   id: d.id,
+   education: d.education,
+   code: d.code,
+  };
+ });
+ return datas;
 };
 
 // Create

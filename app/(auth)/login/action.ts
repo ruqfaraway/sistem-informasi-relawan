@@ -23,6 +23,7 @@ export const PostLogin = async (data: login): Promise<ActionResponseType> => {
     session.user_id = user.id.toString();
     session.superAdmin = user.role_id === 1 ? true : false;
     session.email = user.email;
+    session.unit_id = user?.unit_id?.toString();
     session.name = user.name;
     await session.save();
     return {

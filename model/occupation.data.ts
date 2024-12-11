@@ -10,15 +10,27 @@ interface occupation {
 
 export const getOccupationData = async () => {
  const data = await prisma.occupation.findMany();
- return data;
+ const datas = data.map((d) => {
+  return {
+   id: d.id,
+   occupation: d.occupation,
+   code: d.code,
+  };
+ });
+ return datas;
 };
 
 export const getOccupationAll = async () => {
  const data = await prisma.occupation.findMany();
- return data;
+ const datas = data.map((d) => {
+  return {
+   id: d.id,
+   occupation: d.occupation,
+   code: d.code,
+  };
+ });
+ return datas;
 };
-
-
 
 // Create
 export const createOccupationData = async (data: occupation) => {

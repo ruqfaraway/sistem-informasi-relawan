@@ -130,6 +130,8 @@ const AddUserVolunteerForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      status: false,
+      isOfficer: false,
     },
   });
 

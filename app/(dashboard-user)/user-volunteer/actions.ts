@@ -205,20 +205,21 @@ export const createVolunteerFromUser = async ({ data }: {
  }
 }
 
-export const DeleteVolunteer = async (id: string): Promise<ActionResponseType> => {
+export const DeleteUserVolunteer = async (id: string): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
-  if (session.superAdmin === true) {
+  if (session.isLoggedIn === true) {
    await deleteVolunteerData(id);
    return {
     success: true,
     message: "success delete data",
    };
+  } else {
+   return {
+    success: false,
+    message: "You are not authorized",
+   };
   }
-  return {
-   success: false,
-   message: "You are not authorized",
-  };
  } catch (error) {
   return {
    success: false,
@@ -227,7 +228,7 @@ export const DeleteVolunteer = async (id: string): Promise<ActionResponseType> =
  }
 }
 
-export const UpdateVolunteer = async ({ id, data }: {
+export const UpdateVolunteerFromUser = async ({ id, data }: {
  id: string
  data: VolunteerData
 }): Promise<ActionResponseType> => {

@@ -35,12 +35,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { NewDatePicker } from "@/components/NewDatePicker/NewDatePicker";
-import { UpdateVolunteer } from "../../actions";
+import { UpdateVolunteerFromUser } from "../../actions";
 
 const formSchema = z.object({
   volunteer_id: z.string().min(10).max(20),
   volunteer_type_id: z.string().min(2).max(50),
-  unit_id: z.string().min(2).max(50),
   religion_id: z.string().min(2).max(50),
   education_id: z.string().min(2).max(50),
   occupation_id: z.string().min(2).max(50),
@@ -74,11 +73,6 @@ interface positionList {
   position: string;
 }
 
-interface unitList {
-  id: string;
-  name: string;
-}
-
 interface volunteerTypeList {
   id: string;
   volunteer_type: string;
@@ -96,7 +90,6 @@ type Status = "active" | "inactive";
 interface VolunteerData {
   volunteer_id: string;
   volunteer_type_id: string;
-  unit_id: string;
   religion_id: string;
   education_id: string;
   occupation_id: string;
@@ -116,12 +109,11 @@ interface VolunteerData {
   status: Status;
 }
 
-const UpdateVolunteerForm = ({
+const UpdateUserVolunteerForm = ({
   initialValues,
   educationList,
   occupationList,
   positionList,
-  unitList,
   volunteerTypeList,
   religionList,
 }: {
@@ -129,7 +121,6 @@ const UpdateVolunteerForm = ({
   educationList: educationList[];
   occupationList: occupationList[];
   positionList: positionList[];
-  unitList: unitList[];
   volunteerTypeList: volunteerTypeList[];
   religionList: religionList[];
 }) => {
@@ -153,7 +144,6 @@ const UpdateVolunteerForm = ({
     const toBeSubmitted = {
       volunteer_id: values.volunteer_id,
       volunteer_type_id: values.volunteer_type_id,
-      unit_id: values.unit_id,
       religion_id: values.religion_id,
       education_id: values.education_id,
       occupation_id: values.occupation_id,
@@ -171,15 +161,15 @@ const UpdateVolunteerForm = ({
       period: values.period,
       isOfficer: values.isOfficer,
     } as VolunteerData;
-    await UpdateVolunteer({ id, data: toBeSubmitted })
+    await UpdateVolunteerFromUser({ id, data: toBeSubmitted })
       .then((res) => {
         if (res.success) {
           toast({
             title: "Success",
-            description: "Volunteer added successfully",
+            description: "Volunteer updated successfully",
           });
           form.reset();
-          router.push("/volunteer-management");
+          router.push("/user-volunteer");
         }
       })
       .catch((error) => {
@@ -348,7 +338,7 @@ const UpdateVolunteerForm = ({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {educationList.map((item) => (
+                          {educationList?.map((item) => (
                             <SelectItem key={item.id} value={item.id}>
                               {item.education}
                             </SelectItem>
@@ -451,33 +441,6 @@ const UpdateVolunteerForm = ({
             </CardHeader>
             <CardContent className="grid w-full gap-4">
               <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="unit_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Unit :</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select your unit!" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {unitList.map((item) => (
-                            <SelectItem key={item.id} value={item.id}>
-                              {item.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                 <FormField
                   control={form.control}
                   name="period"
@@ -631,4 +594,4 @@ const UpdateVolunteerForm = ({
   );
 };
 
-export default UpdateVolunteerForm;
+export default UpdateUserVolunteerForm;

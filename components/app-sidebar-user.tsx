@@ -18,6 +18,8 @@ import {
 
 import { PostLogout } from "@/app/(auth)/login/action";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
+import MainLoaderComps from "./MainLoaderComps/MainLoaderComps";
 
 // This is sample data.
 const data = {
@@ -49,11 +51,23 @@ const data = {
 export function AppSidebar2({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const [loading, setLoading] = React.useState(false);
+  const { toast } = useToast();
   const handleLogout = async () => {
-    await PostLogout();
+    setLoading(true);
+    await PostLogout().finally(() => {
+      toast({
+        title: "Logout",
+        description: "You have been logged out.",
+      });
+      setLoading(false);
+    });
   };
   return (
     <Sidebar {...props}>
+      {loading && (
+       <MainLoaderComps />
+      )}
       <SidebarHeader>
         <VersionSwitcher />
         {/* <SearchForm /> */}

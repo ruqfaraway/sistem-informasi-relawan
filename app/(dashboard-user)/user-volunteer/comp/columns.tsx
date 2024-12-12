@@ -47,7 +47,7 @@ export const columns: ColumnDef<VolunteersType>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex justify-center space-x-4">
-          <Link href={`/volunteer-management/detail/${row.original.id}`}>
+          <Link href={`/user-volunteer/detail/${row.original.id}`}>
             <Button>Edit</Button>
           </Link>
           <DeleteButton id={row.original.id} />

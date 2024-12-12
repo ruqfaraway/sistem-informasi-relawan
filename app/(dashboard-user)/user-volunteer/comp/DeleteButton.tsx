@@ -1,30 +1,49 @@
 "use client";
 import React, { useState } from "react";
-// import { DeleteVolunteer } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { DeleteUserVolunteer } from "../actions";
+import { useRouter } from "next/navigation";
 
 const DeleteButton = ({ id }: { id: string }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  // const handleDelete = async (id: string) => {
-  //   setLoading(true);
-  //   await DeleteVolunteer(id).then((res) => {
-  //     if (res.success === true) {
-  //       toast({
-  //         title: "Success",
-  //         description: res.message,
-  //       });
-  //     }
-  //   });
-  //   setLoading(false);
-  // };
+  const router = useRouter();
+  const handleDelete = async (id: string) => {
+    setLoading(true);
+    await DeleteUserVolunteer(id)
+      .then((res) => {
+        if (res.success === true) {
+          toast({
+            title: "Success",
+            description: res.message,
+          });
+          router.refresh();
+        } else {
+          toast({
+            title: "Error",
+            description: res.message,
+          });
+        }
+      })
+      .catch((err) => {
+        toast({
+          title: "Error",
+          description: err.message,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   return (
     <Button
       disabled={loading}
       variant="destructive"
-      onClick={() => {}}
+      onClick={() => {
+        handleDelete(id);
+      }}
     >
       {!loading && "Delete"}
       {loading && (

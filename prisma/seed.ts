@@ -66,6 +66,15 @@ const initialVolunteerTypes = [
  },
 ]
 
+const initialRoles = [
+ {
+  role_name: 'super-admin'
+ },
+ {
+  role_name: 'user-admin'
+ }
+]
+
 const initialEducations = [
  {
   education: 'SD',
@@ -120,6 +129,11 @@ const initialOccupations = [
  }
 ]
 async function main() {
+ const roles = initialRoles.map(async (role) => {
+  return await prisma.role.create({
+   data: role
+  })
+ })
  const positions = initialPositions.map(async (position) => {
   return await prisma.position.create({
    data: position
@@ -145,11 +159,12 @@ async function main() {
    data: occupation
   })
  })
+ await Promise.all(positions)
  await Promise.all(occupations)
  await Promise.all(educations)
- await Promise.all(positions)
  await Promise.all(religions)
  await Promise.all(volunteerTypes)
+ await Promise.all(roles)
  console.log('Seed successfull')
 }
 main()

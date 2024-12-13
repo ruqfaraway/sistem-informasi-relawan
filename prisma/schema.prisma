@@ -8,17 +8,17 @@ datasource db {
 }
 
 model User {
-  id         Int            @id @default(autoincrement())
-  name       String?
-  email      String         @db.VarChar
-  password   String         @db.VarChar
-  unit_id    String?
+  id         String    @id @default(uuid()) 
+  email      String    @db.VarChar
+  password   String    @db.VarChar
   role_id    Int
-  created_at DateTime       @default(now()) @db.Timestamp(6)
-  updated_at DateTime       @default(now()) @db.Timestamp(6)
-  deleted_at DateTime?      @db.Timestamp(6)
-  role       Role           @relation(fields: [role_id], references: [id])
-  unit       VolunteerUnit? @relation(fields: [unit_id], references: [id])
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime  @default(now()) @db.Timestamp(6)
+  deleted_at DateTime? @db.Timestamp(6)
+
+  // Relationships
+  role  Role            @relation(fields: [role_id], references: [id])
+  units VolunteerUnit[] // Admin can manage multiple units if needed
 
   @@map("users")
 }
@@ -33,14 +33,18 @@ model Role {
 }
 
 model VolunteerUnit {
-  id         String      @id @default(uuid())
+  id         String      @id @default(uuid()) 
   name       String
   builder    String
   birth_date DateTime
+  address    String
+  phone      String
+  user_id    String?    
   created_at DateTime    @default(now()) @db.Timestamp(6)
   updated_at DateTime    @default(now()) @db.Timestamp(6)
   deleted_at DateTime?   @db.Timestamp(6)
-  users      User[]
+  // Relationships
+  user       User?       @relation(fields: [user_id], references: [id], onDelete: Cascade) // Nullable for unassigned units
   volunteers Volunteer[]
 
   @@map("volunteer_units")
@@ -48,7 +52,7 @@ model VolunteerUnit {
 
 model Volunteer {
   id                String         @id @default(uuid())
-  volunteer_id      String         
+  volunteer_id      String
   volunteer_type_id String
   unit_id           String
   religion_id       String
@@ -74,9 +78,11 @@ model Volunteer {
   religion          Religion       @relation(fields: [religion_id], references: [id])
   education         EducationLevel @relation(fields: [education_id], references: [id])
   occupation        Occupation     @relation(fields: [occupation_id], references: [id])
-  unit              VolunteerUnit  @relation(fields: [unit_id], references: [id])
+  unit              VolunteerUnit  @relation(fields: [unit_id], references: [id], onDelete: Cascade)
   type              VolunteerType  @relation(fields: [volunteer_type_id], references: [id])
   position          Position       @relation(fields: [position_id], references: [id])
+  assignments       Assignment[]
+
   @@map("volunteers")
 }
 
@@ -103,6 +109,7 @@ model Position {
 
   @@map("positions")
 }
+
 model VolunteerType {
   id             String      @id @default(uuid())
   code           String      @unique
@@ -137,6 +144,33 @@ model Occupation {
   volunteers Volunteer[]
 
   @@map("occupations")
+}
+
+model AssignmentType {
+  id              String       @id @default(uuid())
+  code            String       @unique
+  assignment_type String
+  created_at      DateTime     @default(now())
+  updated_at      DateTime     @updatedAt
+  deleted_at      DateTime?    @db.Timestamp(6)
+  assignments     Assignment[]
+}
+
+model Assignment {
+  id                 String         @id @default(uuid())
+  assignment_type_id String
+  volunteer_id       String
+  photo              String?
+  start_date         DateTime
+  end_date           DateTime
+  description        String?
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @updatedAt
+  deleted_at         DateTime?      @db.Timestamp(6)
+  type               AssignmentType @relation(fields: [assignment_type_id], references: [id])
+  volunteer          Volunteer      @relation(fields: [volunteer_id], references: [id])
+
+  @@map("assignments")
 }
 
 enum Gender {

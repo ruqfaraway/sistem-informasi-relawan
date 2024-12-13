@@ -35,6 +35,6 @@ export const loginPost = async (data: loginData) => {
 //   }
 // };
 
-export const getUserById = async (id: number) => {
+export const getUserById = async (id: string) => {
   return await prisma.user.findFirst({ where: { id: id } });
 };

@@ -27,6 +27,8 @@ const formSchema = z.object({
     .max(50),
   birth_date: z.date(),
   email: z.string().email(),
+  address: z.string().min(2).max(50),
+  phone: z.string().min(2).max(50)
 });
 
 const AddUnitVolunteer = () => {
@@ -90,6 +92,32 @@ const AddUnitVolunteer = () => {
                 <FormLabel>Builder :</FormLabel>
                 <FormControl>
                   <Input placeholder="Builder" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Address :</FormLabel>
+                <FormControl>
+                  <Input placeholder="Address" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone :</FormLabel>
+                <FormControl>
+                  <Input placeholder="Phone" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

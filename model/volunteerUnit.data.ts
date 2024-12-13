@@ -6,6 +6,8 @@ interface createUser {
  birth_date: Date;
  email: string;
  password: string;
+ address: string;
+ phone: string
 }
 
 
@@ -14,20 +16,21 @@ interface createUser {
 export const createUserAndUnitVolunteer = (data: createUser,) => {
  return prisma.$transaction(async (prisma) => {
   try {
+   const user = await prisma.user.create({
+    data: {
+     email: data.email,
+     password: data.password,
+     role_id: 2, // or any appropriate role_id value
+    },
+   });
    const unit = await prisma.volunteerUnit.create({
     data: {
      name: data.name,
      builder: data.builder,
      birth_date: data.birth_date,
-    },
-   });
-   const user = await prisma.user.create({
-    data: {
-     name: data.name,
-     email: data.email,
-     password: data.password,
-     unit_id: unit.id,
-     role_id: 2, // or any appropriate role_id value
+     user_id: user.id,
+     address: data.address,
+     phone: data.phone,
     },
    });
    return { unit, user };

@@ -23,6 +23,8 @@ export const createVolunteerUnit = async (data: volunteerUnit): Promise<ActionRe
     email: data.email,
     birth_date: data.birth_date,
     password: hashedPassword, // or any appropriate password value
+    address: "address",
+    phone: "phone",
    });
    revalidatePath("/question");
    return {

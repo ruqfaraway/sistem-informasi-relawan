@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { useFormState } from "react-dom";
 
 export function RegisterForm() {
-  const [state, action, pending] = useFormState(signup, undefined);
+  const [state] = useFormState(signup, undefined);
   return (
     <Card className="mx-auto max-w-sm w-full">
       <CardHeader>
@@ -21,7 +21,7 @@ export function RegisterForm() {
         <CardDescription>Please register to create an account</CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="w-full" action={signup}>
+        <form className="w-full">
           <div className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Name</Label>
@@ -37,7 +37,7 @@ export function RegisterForm() {
               <Label htmlFor="password">Password</Label>
               <Input id="password" name="password" />
             </div>
-            <Button type="submit" className="w-full" disabled={pending}>
+            <Button type="submit" className="w-full">
               Register
             </Button>
           </div>

@@ -32,5 +32,5 @@ export type FormState =
     success: boolean;
     message: string;
     admin?: boolean;
-    data?: any;
+    data?: Record<string, unknown>;
   };

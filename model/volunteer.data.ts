@@ -201,6 +201,17 @@ export const getVolunteerData = async () => {
  return datas;
 }
 
+export const getAllVolunteer = async () => {
+ const data = await prisma.volunteer.findMany();
+ const volunteer = data.map((d) => {
+  return {
+   id: d.id,
+   name: d.name,
+  }
+ })
+ return volunteer;
+}
+
 export const getVolunteerDataByUnit = async (unit_id: string | undefined) => {
  const data = await prisma.volunteer.findMany({
   where: {

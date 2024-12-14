@@ -1,8 +1,8 @@
 "use server";
 import { getSession } from "@/lib/session";
+import { getAssignmentTypeData } from "./actions";
 import { redirect } from "next/navigation";
-import { getAssignmentData } from "./actions";
-import AssignmentPage from "./comp/AssignmentPage";
+import AssignmentTypePage from "./comp/AssignmentTypePage";
 
 const Page = async () => {
   const session = await getSession();
@@ -12,10 +12,10 @@ const Page = async () => {
   if (!session.superAdmin) {
     redirect("/user-dashboard");
   }
-  const data = await getAssignmentData();
+  const data = await getAssignmentTypeData();
   return (
     <>
-      <AssignmentPage dataSource={data.data} />
+      <AssignmentTypePage dataSource={data.data} />
     </>
   );
 };

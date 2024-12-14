@@ -24,6 +24,16 @@ const data = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
+      title: "Dashboard",
+      url: "/",
+      items: [
+        {
+          title: "Dashboard",
+          url: "/",
+        },
+      ],
+    },
+    {
       title: "Master Data",
       url: "#",
       items: [
@@ -39,6 +49,10 @@ const data = {
           title: "Pekerjaan",
           url: "/occupation",
         },
+        {
+          title: "Jenis Penugasan",
+          url: "/assignment-type",
+        }
       ],
     },
     {
@@ -49,11 +63,10 @@ const data = {
           title: "Manajemen Relawan",
           url: "/volunteer-management",
         },
-        // {
-        //   title: "Manajemen Penugasan",
-        //   url: "/assignment-management",
-        //   // isActive: true,
-        // },
+        {
+          title: "Manajemen Penugasan",
+          url: "/assignment-management",
+        },
         // {
         //   title: "Rendering",
         //   url: "#",

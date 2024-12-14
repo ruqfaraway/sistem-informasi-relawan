@@ -2,7 +2,7 @@
 import React from "react";
 import UpdateUnitVolunteer from "./UpdateUnitVolunteer";
 
-const page = () => {
+const page = async () => {
   return <UpdateUnitVolunteer />;
 };
 

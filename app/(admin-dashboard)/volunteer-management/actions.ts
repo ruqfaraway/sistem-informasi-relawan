@@ -6,36 +6,9 @@ import { getOccupationAll } from "@/model/occupation.data";
 import { getPositionAll } from "@/model/position.data";
 import { getReligionAll } from "@/model/religion.data";
 import { getVolunteerTypeAll } from "@/model/volunteer-type.data";
-import { createVolunteerData, deleteVolunteerData, getVolunteerData, updateVolunteerData } from "@/model/volunteer.data";
+import { createVolunteerData, deleteVolunteerData, getAllVolunteer, getVolunteerData, updateVolunteerData } from "@/model/volunteer.data";
 import { getUnitVolunteerAll } from "@/model/volunteerUnit.data";
-
-
-type Gender = "M" | "F";
-type BloodType = "A" | "B" | "AB" | "O" | "Unknown";
-type Status = "active" | "inactive";
-
-interface VolunteerData {
- volunteer_id: string
- volunteer_type_id: string
- unit_id: string
- religion_id: string
- education_id: string
- occupation_id: string
- position_id: string
- name: string
- born_place: string
- birth_date: Date
- gender: Gender
- blood_type: BloodType
- address: string
- phone: string
- email: string
- status: Status
- join_date: Date
- photo?: string
- period?: string
- isOfficer: boolean
-}
+import { VolunteerData } from "./types/volunteer.type";
 
 //get dropdown occupation
 export const getDataOccupation = async (): Promise<ActionResponseType> => {
@@ -200,6 +173,28 @@ export const getDataVolunteer = async (): Promise<ActionResponseType> => {
  }
 }
 
+export const getAllVolunteerData = async (): Promise<ActionResponseType> => {
+ const session = await getSession();
+ try {
+  if (session.superAdmin === true) {
+   const data = await getAllVolunteer();
+   return {
+    success: true,
+    message: "success get data",
+    data
+   };
+  }
+  return {
+   success: false,
+   message: "You are not authorized",
+  };
+ } catch (error) {
+  return {
+   success: false,
+   message: error instanceof Error ? error.message : "Something went wrong",
+  }
+ }
+}
 export const createVolunteer = async ({ data }: {
  data: VolunteerData
 }): Promise<ActionResponseType> => {

@@ -4,7 +4,7 @@ import TableVolunteer from "./TableVolunteer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { VolunteersType } from "./columns";
+import { VolunteersType } from "../types/volunteer.type";
 
 const VolunteerPage = ({ dataSource }: { dataSource: VolunteersType[] }) => {
   const router = useRouter();

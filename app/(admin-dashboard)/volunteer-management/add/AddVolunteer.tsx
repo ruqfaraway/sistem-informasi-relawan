@@ -36,6 +36,15 @@ import {
 } from "@/components/ui/card";
 import { NewDatePicker } from "@/components/NewDatePicker/NewDatePicker";
 import { createVolunteer } from "../actions";
+import {
+  educationList,
+  occupationList,
+  positionList,
+  religionList,
+  unitList,
+  VolunteerData,
+  volunteerTypeList,
+} from "../types/volunteer.type";
 
 const formSchema = z.object({
   volunteer_id: z.string().min(10).max(20),
@@ -58,63 +67,6 @@ const formSchema = z.object({
   status: z.boolean(),
   isOfficer: z.boolean(),
 });
-
-interface educationList {
-  id: string;
-  education: string;
-}
-
-interface occupationList {
-  id: string;
-  occupation: string;
-}
-
-interface positionList {
-  id: string;
-  position: string;
-}
-
-interface unitList {
-  id: string;
-  name: string;
-}
-
-interface volunteerTypeList {
-  id: string;
-  volunteer_type: string;
-}
-
-interface religionList {
-  id: string;
-  religion: string;
-}
-
-type Gender = "M" | "F";
-type BloodType = "A" | "B" | "AB" | "O" | "Unknown";
-type Status = "active" | "inactive";
-
-interface VolunteerData {
-  volunteer_id: string;
-  volunteer_type_id: string;
-  unit_id: string;
-  religion_id: string;
-  education_id: string;
-  occupation_id: string;
-  position_id: string;
-  name: string;
-  born_place: string;
-  birth_date: Date;
-  gender: Gender;
-  blood_type: BloodType;
-  address: string;
-  phone: string;
-  email: string;
-  status: Status;
-  join_date: Date;
-  photo?: string;
-  period?: string;
-  isOfficer: boolean;
-}
 
 const AddVolunteerForm = ({
   educationList,

@@ -205,6 +205,5 @@ const total = await prisma.assignment.count({
   }
  },
 });
-console.log(total);
 return total;
 }

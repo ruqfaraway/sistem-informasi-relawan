@@ -22,8 +22,6 @@ const Page = async ({
   const page = Number(searchParams?.page) || 1;
   const perPage = Number(searchParams?.perPage) || 10;
   const { data: list } = await getAssignmentDataUserPaginate(page, perPage);
-
-  console.log(list, 'list');
   return (
     <>
       <AssignmentPage dataSource={list} />

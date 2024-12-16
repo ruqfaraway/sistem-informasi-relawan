@@ -6,7 +6,7 @@ import { getOccupationAll } from "@/model/occupation.data";
 import { getPositionAll } from "@/model/position.data";
 import { getReligionAll } from "@/model/religion.data";
 import { getVolunteerTypeAll } from "@/model/volunteer-type.data";
-import { createVolunteerData, deleteVolunteerData, getVolunteerDataByUnit, updateVolunteerData } from "@/model/volunteer.data";
+import { createVolunteerData, deleteVolunteerData, getVolunteerDataByUnit, getVolunteerDataPagination, updateVolunteerData } from "@/model/volunteer.data";
 
 
 type Gender = "M" | "F";
@@ -139,6 +139,30 @@ export const getDataPosition = async (): Promise<ActionResponseType> => {
     success: true,
     message: "success get data",
     data,
+   };
+  }
+  return {
+   success: false,
+   message: "You are not authorized",
+  };
+ } catch (error) {
+  return {
+   success: false,
+   message: error instanceof Error ? error.message : "Something went wrong",
+  }
+ }
+}
+
+export const getDataUserVolunteerPagination = async (page: number, perPage: number): Promise<ActionResponseType> => {
+ const session = await getSession();
+ try {
+  if (session.isLoggedIn === true) {
+   const id = session?.unit_id ?? undefined;
+   const data = await getVolunteerDataPagination(page, perPage, id);
+   return {
+    success: true,
+    message: "success get data",
+    data
    };
   }
   return {

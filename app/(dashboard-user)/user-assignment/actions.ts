@@ -1,7 +1,7 @@
 'use server'
 import { ActionResponseType } from "@/lib/definitions";
 import { getSession } from "@/lib/session";
-import { createAssignment, deleteAssignment, getAssignment, getAssignmentPaginateAdmin, getDetailAssignment, updateAssignment } from "@/model/assignment";
+import { createAssignment, deleteAssignment, getAssignment, getAssignmentPaginateUser, getDetailAssignment, updateAssignment } from "@/model/assignment";
 import { revalidatePath } from "next/cache";
 
 interface Assignment {
@@ -15,7 +15,7 @@ interface Assignment {
 export const PostAssignmentData = async (data: Assignment): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
-  if (session.superAdmin === true) {
+  if (session.isLoggedIn === true) {
    await createAssignment({
     volunteer_id: data.volunteer_id,
     assignment_type_id: data.assignment_type_id,
@@ -41,11 +41,12 @@ export const PostAssignmentData = async (data: Assignment): Promise<ActionRespon
  }
 };
 
-export const getAssignmentDataAdminPaginate = async (page: number, perPage: number): Promise<ActionResponseType> => {
+export const getAssignmentDataUserPaginate = async (page: number, perPage: number): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
-  if (session.superAdmin === true) {
-   const data = await getAssignmentPaginateAdmin(page, perPage);
+  if (session.isLoggedIn === true) {
+   const id = session.unit_id ?? "";
+   const data = await getAssignmentPaginateUser(page, perPage, id);
    return {
     success: true,
     message: "success get data",
@@ -64,10 +65,12 @@ export const getAssignmentDataAdminPaginate = async (page: number, perPage: numb
  }
 }
 
+
+
 export const getAssignmentData = async (): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
-  if (session.superAdmin === true) {
+  if (session.isLoggedIn === true) {
    const data = await getAssignment();
    return {
     success: true,
@@ -90,7 +93,7 @@ export const getAssignmentData = async (): Promise<ActionResponseType> => {
 export const getDetailAssignmentData = async (id: string): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
-  if (session.superAdmin === true) {
+  if (session.isLoggedIn === true) {
    const data = await getDetailAssignment(id);
    return {
     success: true,
@@ -119,7 +122,7 @@ export const getDetailAssignmentData = async (id: string): Promise<ActionRespons
 export const UpdateAssignmentData = async (id: string, data: Assignment): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
-  if (session.superAdmin === true) {
+  if (session.isLoggedIn === true) {
    await updateAssignment(id, {
     volunteer_id: data.volunteer_id,
     assignment_type_id: data.assignment_type_id,
@@ -148,7 +151,7 @@ export const UpdateAssignmentData = async (id: string, data: Assignment): Promis
 export const DeleteAssignmentData = async (id: string): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
-  if (session.superAdmin === true) {
+  if (session.isLoggedIn === true) {
    await deleteAssignment(id);
    revalidatePath("/assignment");
    return {

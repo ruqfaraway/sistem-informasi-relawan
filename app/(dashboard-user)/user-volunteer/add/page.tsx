@@ -22,8 +22,6 @@ const page = async () => {
   const { data: volunteerTypeList } = await getDataVolunteerType();
   const { data: religionList } = await getDataReligion();
 
-  console.log(educationList, occupationList, positionList, volunteerTypeList, religionList);
-
   return (
     <AddUserVolunteerForm
       educationList={educationList}

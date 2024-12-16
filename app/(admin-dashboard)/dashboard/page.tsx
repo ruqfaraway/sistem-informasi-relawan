@@ -1,7 +1,8 @@
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import AdminDashboardPage from "./comp/DashboardPage";
-import { getDataTotalVolunteers } from "@/app/(dashboard-user)/user-dashboard/actions";
+import { getDataTotalVolunteersAdmin } from "./actions";
+
 
 export default async function Page() {
   const session = await getSession();
@@ -11,9 +12,10 @@ export default async function Page() {
   if (!session.superAdmin) {
     redirect("/user-dashboard");
   }
- const data = await getDataTotalVolunteers();
+ const data = await getDataTotalVolunteersAdmin();
   const dashboardData = {
     total_volunteers: data?.total_volunteers ?? 0,
+    total_assignment: data?.total_assignment ?? 0,
   };
   return (
     <>

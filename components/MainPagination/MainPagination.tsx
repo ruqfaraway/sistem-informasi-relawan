@@ -1,3 +1,4 @@
+"use client";
 import {
   Pagination,
   PaginationContent,
@@ -7,8 +8,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useState } from "react";
 
 export const MainPagination = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(3);
+  const [pageSize, setPageSize] = useState(10);
+  
   return (
     <Pagination>
       <PaginationContent>

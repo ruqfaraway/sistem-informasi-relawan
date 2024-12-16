@@ -6,7 +6,18 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { VolunteersType } from "../types/volunteer.type";
 
-const VolunteerPage = ({ dataSource }: { dataSource: VolunteersType[] }) => {
+const VolunteerPage = ({
+  dataSource,
+}: {
+  dataSource: {
+    data: VolunteersType[];
+    metadata: {
+      page: number;
+      perPage: number;
+      total: number;
+    };
+  };
+}) => {
   const router = useRouter();
   return (
     <>
@@ -19,7 +30,7 @@ const VolunteerPage = ({ dataSource }: { dataSource: VolunteersType[] }) => {
         </form>
       </div>
       <div>
-        <TableVolunteer data={dataSource} />
+        <TableVolunteer dataSource={dataSource} />
       </div>
     </>
   );

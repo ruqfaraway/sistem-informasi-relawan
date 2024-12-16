@@ -7,11 +7,16 @@ interface loginData {
   password: string;
 }
 export const loginPost = async (data: loginData) => {
-  const user = await prisma.user.findFirst({ where: { email: data.email } });
+  const user = await prisma.user.findFirst({
+    where: { email: data.email },
+  });
   if (!user) return false;
   const checkPassword = await bcrypt.compare(data.password, user.password);
   if (checkPassword) {
-    return user;
+    const unit = await prisma.volunteerUnit.findFirst({
+      where: { user_id: user.id },
+    });
+    return { ...user, unit_id: unit?.id };
   } else {
     return false;
   }

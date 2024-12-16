@@ -3,39 +3,43 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import React from "react";
-import TableEducation from "./TableEducation";
-interface EducationPageProps {
+import TableAssignment from "./TableAssignment";
+interface AssignmentPageProps {
   dataSource: {
-    data: data[];
+    data : data[];
     metadata: {
       page: number;
       perPage: number;
       total: number;
     };
-  };
+  }
 }
 interface data {
   id: string;
-  code: string;
-  education: string;
+  name: string;
+  type: string;
+  start_date: Date;
+  end_date: Date;
 }
-const EducationPage: React.FC<EducationPageProps> = ({ dataSource }) => {
+const AssignmentPage: React.FC<AssignmentPageProps> = ({
+  dataSource,
+}) => {
   const router = useRouter();
   return (
     <>
       <div className="flex justify-between">
-        <Button onClick={() => router.push("/education/add")}>
-          Add Education
+        <Button onClick={() => router.push("/user-assignment/add")}>
+          Add Assignment 
         </Button>
         <form>
           <Input placeholder="Search" />
         </form>
       </div>
       <div>
-        <TableEducation dataSource={dataSource} />
+        <TableAssignment dataSource={dataSource} />
       </div>
     </>
   );
 };
 
-export default EducationPage;
+export default AssignmentPage;

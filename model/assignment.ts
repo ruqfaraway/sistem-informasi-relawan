@@ -10,8 +10,87 @@ interface Assignment {
  description: string;
 }
 
-// get all
+export const getAssignmentPaginateUser = async (page: number, perPage: number, id: string) => {
+ const data = await prisma.assignment.findMany({
+  where: {
+   volunteer: {
+    unit_id: id,
+   },
+  },
+  select: {
+   id: true,
+   volunteer: {
+    select: {
+     unit_id: true,
+     name: true,
+    },
+   },
+   type: {
+    select: {
+     assignment_type: true,
+    },
+   },
+   start_date: true,
+   end_date: true,
+  },
+  skip: (page - 1) * perPage,
+  take: perPage,
+ });
+ const total = await prisma.assignment.count({
+  where: {
+   volunteer: {
+    unit_id: id,
+   },
+  },
+ });
+ const result = data.map((d) => {
+  return {
+   id: d.id,
+   name: d.volunteer.name,
+   type: d.type.assignment_type,
+   start_date: d.start_date,
+   end_date: d.end_date,
+  };
+ });
+ return {
+  data: result,
+  metadata: {
+   page: page,
+   perPage: perPage,
+   total: total,
+  },
+ }
+}
 
+export const getAssignmentPaginateAdmin = async (page: number, perPage: number) => {
+ const data = await prisma.assignment.findMany({
+  include: {
+   type: true,
+   volunteer: true,
+  },
+  skip: (page - 1) * perPage,
+  take: perPage,
+ });
+ const total = await prisma.assignment.count();
+ const datas = data.map((d) => {
+  return {
+   id: d.id,
+   name: d.volunteer.name,
+   type: d.type.assignment_type,
+   start_date: d.start_date,
+   end_date: d.end_date,
+  };
+ });
+ return {
+  data: datas,
+  metadata: {
+   page: page,
+   perPage: perPage,
+   total: total,
+  },
+ }
+}
+// get all
 export const getAssignment = async () => {
  const data = await prisma.assignment.findMany(
   {
@@ -112,3 +191,20 @@ export const deleteAssignment = async (id: string) => {
   throw error;
  }
 };
+
+export const getTotalAssignment = async () => {
+ const total = await prisma.assignment.count();
+ return total;
+}
+
+export const getAssignmentByVolunteer = async (id: string) => {
+const total = await prisma.assignment.count({
+ where: {
+  volunteer : {
+   unit_id: id,
+  }
+ },
+});
+console.log(total);
+return total;
+}

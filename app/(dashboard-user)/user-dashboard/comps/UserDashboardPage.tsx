@@ -3,6 +3,7 @@ import React from "react";
 
 interface UserDashboardPages {
   total_volunteers: number;
+  total_assignment: number;
 }
 
 const UserDashboardPage = ({
@@ -12,7 +13,7 @@ const UserDashboardPage = ({
 }) => {
   const data = {
     totalVolunteers: dataSource.total_volunteers,
-    totalAssignment: 0,
+    totalAssignment: dataSource.total_assignment,
   };
   return (
     <div className="p-3 border rounded-md min-h-[70vh]">

@@ -29,6 +29,89 @@ interface VolunteerData {
  isOfficer: boolean
 }
 
+export const getVolunteerDataPaginationAdmin = async (page: number, perPage: number) => {
+ const data = await prisma.volunteer.findMany({
+  skip: (page - 1) * perPage,
+  take: perPage,
+  include: {
+   type: true,
+   unit: true,
+   religion: true,
+   education: true,
+   occupation: true,
+   position: true,
+  },
+ });
+ const total = await prisma.volunteer.count();
+ const datas = data.map((d) => {
+  return {
+   id: d.id,
+   nrp: d.volunteer_id,
+   volunteer_type_id: d.type.id,
+   unit_id: d.unit.name,
+   religion_id: d.religion.religion,
+   education_id: d.education.education,
+   occupation_id: d.occupation.occupation,
+   position_id: d.position.position,
+   name: d.name,
+   address: d.address,
+   birth_date: d.birth_date,
+  }
+ })
+ return {
+  data: datas, metadata: {
+   page,
+   perPage,
+   total
+  }
+ };
+}
+
+export const getVolunteerDataPagination = async (page: number, perPage: number, unit_id: string | undefined) => {
+ const data = await prisma.volunteer.findMany({
+  skip: (page - 1) * perPage,
+  take: perPage,
+  where: {
+   unit_id: unit_id,
+  },
+  include: {
+   type: true,
+   unit: true,
+   religion: true,
+   education: true,
+   occupation: true,
+   position: true,
+  },
+ });
+ const total = await prisma.volunteer.count({
+  where: {
+   unit_id: unit_id,
+  },
+ });
+ const datas = data.map((d) => {
+  return {
+   id: d.id,
+   nrp: d.volunteer_id,
+   volunteer_type_id: d.type.id,
+   unit_id: d.unit.name,
+   religion_id: d.religion.religion,
+   education_id: d.education.education,
+   occupation_id: d.occupation.occupation,
+   position_id: d.position.position,
+   name: d.name,
+   address: d.address,
+   birth_date: d.birth_date,
+  }
+ })
+ return {
+  data: datas, metadata: {
+   page,
+   perPage,
+   total
+  }
+ };
+}
+
 export const createVolunteerData = async (data: VolunteerData) => {
  const div: Prisma.VolunteerCreateInput = {
   volunteer_id: data.volunteer_id,

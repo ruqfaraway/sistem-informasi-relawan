@@ -3,6 +3,7 @@ import React from "react";
 
 interface AdminDashboardPages {
   total_volunteers: number;
+  total_assignment: number;
 }
 
 const AdminDashboardPage = ({
@@ -12,7 +13,7 @@ const AdminDashboardPage = ({
 }) => {
   const data = {
     totalVolunteers: dataSource.total_volunteers,
-    totalAssignment: 0,
+    totalAssignment: dataSource.total_assignment,
   };
   return (
     <div className="p-3 border rounded-md min-h-[70vh]">
@@ -23,7 +24,7 @@ const AdminDashboardPage = ({
           </CardHeader>
           <CardContent>
             <p className="text-right font font-semibold text-4xl">
-              {data.totalVolunteers}
+              {data?.totalVolunteers}
             </p>
           </CardContent>
         </Card>
@@ -33,7 +34,7 @@ const AdminDashboardPage = ({
           </CardHeader>
           <CardContent>
             <p className="text-right font font-semibold text-4xl">
-              {data.totalAssignment}
+              {data?.totalAssignment}
             </p>
           </CardContent>
         </Card>

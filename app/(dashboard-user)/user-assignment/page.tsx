@@ -1,8 +1,8 @@
 "use server";
 import { getSession } from "@/lib/session";
-import { getPaginationEducation } from "./actions";
-import EducationPage from "./comp/EducationPage";
 import { redirect } from "next/navigation";
+import { getAssignmentDataUserPaginate } from "./actions";
+import AssignmentPage from "./comp/AssignmentPage";
 
 const Page = async ({
   searchParams,
@@ -16,16 +16,17 @@ const Page = async ({
   if (!session) {
     redirect("/login");
   }
-  if (!session.superAdmin) {
-    redirect("/user-dashboard");
+  if (session.superAdmin) {
+    redirect("/dashboard");
   }
   const page = Number(searchParams?.page) || 1;
-  const per_page = Number(searchParams?.perPage) || 10;
+  const perPage = Number(searchParams?.perPage) || 10;
+  const { data: list } = await getAssignmentDataUserPaginate(page, perPage);
 
-  const { data: list } = await getPaginationEducation(page, per_page);
+  console.log(list, 'list');
   return (
     <>
-      <EducationPage dataSource={list} />
+      <AssignmentPage dataSource={list} />
     </>
   );
 };

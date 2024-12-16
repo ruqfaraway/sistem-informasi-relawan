@@ -38,7 +38,7 @@ export const PostAssignmentTypeData = async (data: AssignmentType): Promise<Acti
 export const getAssignmentTypeData = async (): Promise<ActionResponseType> => {
  const session = await getSession();
  try {
-  if (session.superAdmin === true) {
+  if (session.isLoggedIn === true) {
    const data = await getAssignmentType();
    return {
     success: true,

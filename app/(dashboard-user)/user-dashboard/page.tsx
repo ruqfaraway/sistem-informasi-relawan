@@ -12,6 +12,7 @@ const page = async () => {
   const data = await getDataTotalVolunteers();
   const dashboardData = {
     total_volunteers: data?.total_volunteers ?? 0,
+    total_assignment: data?.total_assignment ?? 0,
   };
   return (
     <>

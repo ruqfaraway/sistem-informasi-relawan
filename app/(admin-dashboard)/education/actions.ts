@@ -1,12 +1,38 @@
 'use server'
 import { ActionResponseType } from "@/lib/definitions";
 import { getSession } from "@/lib/session";
-import { createEducation, deleteEducationData, getDetailEducationData, getEducationData, updateEducationData } from "@/model/education.data";
+import { createEducation, deleteEducationData, getDetailEducationData, getEducationData, getEducationPaginate, updateEducationData } from "@/model/education.data";
 import { revalidatePath } from "next/cache";
 
 interface education {
  name: string;
  code: string;
+}
+
+export const getPaginationEducation = async (page: number, perPage: number): Promise<ActionResponseType> => {
+ const session = await getSession();
+ try {
+  if (session.superAdmin === true) {
+   const data = await getEducationPaginate(
+    page,
+    perPage,
+   );
+   return {
+    success: true,
+    message: "success get data",
+    data,
+   };
+  }
+  return {
+   success: false,
+   message: "You are not authorized",
+  };
+ } catch (error) {
+  return {
+   success: false,
+   message: error instanceof Error ? error.message : "Something went wrong",
+  }
+ }
 }
 
 export const PostEducation = async (data: education): Promise<ActionResponseType> => {

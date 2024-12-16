@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import TableAssignment from "./TableAssignment";
 interface AssignmentPageProps {
-  dataSource: data[];
+  dataSource: {
+    data : data[];
+    metadata: {
+      page: number;
+      perPage: number;
+      total: number;
+    };
+  }
 }
 interface data {
   id: string;

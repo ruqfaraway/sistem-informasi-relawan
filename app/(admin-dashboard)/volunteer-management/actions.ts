@@ -6,7 +6,7 @@ import { getOccupationAll } from "@/model/occupation.data";
 import { getPositionAll } from "@/model/position.data";
 import { getReligionAll } from "@/model/religion.data";
 import { getVolunteerTypeAll } from "@/model/volunteer-type.data";
-import { createVolunteerData, deleteVolunteerData, getAllVolunteer, getVolunteerData, updateVolunteerData } from "@/model/volunteer.data";
+import { createVolunteerData, deleteVolunteerData, getAllVolunteer, getVolunteerData, getVolunteerDataPaginationAdmin, updateVolunteerData } from "@/model/volunteer.data";
 import { getUnitVolunteerAll } from "@/model/volunteerUnit.data";
 import { VolunteerData } from "./types/volunteer.type";
 
@@ -136,6 +136,32 @@ export const getDataPosition = async (): Promise<ActionResponseType> => {
     success: true,
     message: "success get data",
     data,
+   };
+  }
+  return {
+   success: false,
+   message: "You are not authorized",
+  };
+ } catch (error) {
+  return {
+   success: false,
+   message: error instanceof Error ? error.message : "Something went wrong",
+  }
+ }
+}
+
+export const getDataVolunteerAdminPagination = async ({ page, perPage }: {
+ page: number;
+ perPage: number;
+}): Promise<ActionResponseType> => {
+ const session = await getSession();
+ try {
+  if (session.superAdmin === true) {
+   const data = await getVolunteerDataPaginationAdmin(page, perPage);
+   return {
+    success: true,
+    message: "success get data",
+    data
    };
   }
   return {

@@ -1,9 +1,12 @@
 import { SidebarComps2 } from "@/components/user-dashboard/SidebarComps2";
+import { getSession } from "@/lib/session";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <SidebarComps2>{children}</SidebarComps2>;
+  const session = await getSession();
+
+  return <SidebarComps2 name={session?.name ?? ""}>{children}</SidebarComps2>;
 }

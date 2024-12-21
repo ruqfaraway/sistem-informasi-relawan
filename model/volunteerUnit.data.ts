@@ -49,3 +49,30 @@ export const getUnitVolunteer = async () => {
 export const getUnitVolunteerAll = async () => {
  return await prisma.volunteerUnit.findMany();
 }
+
+export const getDetailProfile = async (id: string) => {
+ const response = await prisma.volunteerUnit.findUnique({
+  include: {
+   user: {
+    select: {
+     email: true,
+    },
+   },
+  },
+  where: {
+   id: (id),
+  },
+ });
+
+ const data = {
+  id: response?.id ?? 'no id',
+  name: response?.name ?? 'no name',
+  builder : response?.builder ?? 'no pembina',
+  birth_date: response?.birth_date ?? 'no birth date',
+  address: response?.address ?? 'no address',
+  phone: response?.phone ?? 'no phone',
+  email: response?.user?.email ?? 'no email',
+ }
+
+ return data
+};

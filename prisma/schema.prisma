@@ -39,6 +39,9 @@ model VolunteerUnit {
   birth_date DateTime
   address    String
   phone      String
+  photo      String?
+  instagram  String?
+  website    String?
   user_id    String?    
   created_at DateTime    @default(now()) @db.Timestamp(6)
   updated_at DateTime    @default(now()) @db.Timestamp(6)

@@ -39,6 +39,7 @@ model VolunteerUnit {
   birth_date DateTime
   address    String
   phone      String
+  unit_number String?
   photo      String?
   instagram  String?
   website    String?

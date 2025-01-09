@@ -21,11 +21,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Loader2, LockIcon, MailIcon } from "lucide-react";
-import { PostLogin } from "./action";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 export function FormLogin() {
   const { toast } = useToast();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const FormSchema = z.object({
     email: z.string().min(6, {
@@ -38,20 +39,38 @@ export function FormLogin() {
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     setLoading(true);
-    await PostLogin(data).then((res) => {
-      if (res.success) {
+    await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then(async (res) => {
+        const response = await res.json();
+        if (res.ok) {
+          toast({
+            title: "Login Success",
+            description: "You have successfully logged in",
+          });
+          setLoading(false);
+          router.push("/");
+          return response;
+        } else {
+          toast({
+            title: "Login Failed",
+            description: response.error,
+          });
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
         toast({
-          title: "Success",
-          description: res.message,
+          title: "Login Failed",
+          description: error.message,
         });
-      } else {
-        toast({
-          title: "Error",
-          description: res.message,
-        });
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
   };
 
   const form = useForm<z.infer<typeof FormSchema>>({

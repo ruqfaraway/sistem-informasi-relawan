@@ -27,7 +27,7 @@ const formSchema = z.object({
     .max(50),
   birth_date: z.date(),
   email: z.string().email(),
-  address: z.string().min(2).max(50),
+  address: z.string().min(2).max(250),
   phone: z.string().min(2).max(50)
 });
 

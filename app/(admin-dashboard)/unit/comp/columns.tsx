@@ -1,6 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -34,5 +36,18 @@ export const columns: ColumnDef<Unit>[] = [
       return <div>{new Date(row.original.birth_date).toDateString()}</div>;
     },
   },
-  
+  {
+    accessorKey: "action",
+    header: "Action",
+    cell: ({ row }) => {
+      return (
+        <div className="flex justify-center space-x-4">
+          <Link href={`/unit/detail/${row.original.id}`}>
+            <Button>Edit</Button>
+          </Link>
+          {/* <DeleteButton id={row.original.id} /> */}
+        </div>
+      );
+    },
+  },
 ];

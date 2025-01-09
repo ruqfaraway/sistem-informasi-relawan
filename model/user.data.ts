@@ -16,7 +16,7 @@ export const loginPost = async (data: loginData) => {
     const unit = await prisma.volunteerUnit.findFirst({
       where: { user_id: user.id },
     });
-    return { ...user, unit_id: unit?.id };
+    return { ...user, unit_id: unit?.id, name: unit?.name };
   } else {
     return false;
   }

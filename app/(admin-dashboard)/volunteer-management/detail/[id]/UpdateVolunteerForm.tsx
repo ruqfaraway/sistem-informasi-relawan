@@ -36,6 +36,13 @@ import {
 } from "@/components/ui/card";
 import { NewDatePicker } from "@/components/NewDatePicker/NewDatePicker";
 import { UpdateVolunteer } from "../../actions";
+import { VolunteerDataTypes } from "@/types/volunteer";
+import { EducationDropdownTypes } from "@/types/education";
+import { OccupationDropdownTypes } from "@/types/occupation";
+import { positionDropdownTypes } from "@/types/position";
+import { UnitDropdownTypes } from "@/types/unit";
+import {  VolunteerTypesDropdownTypes } from "@/types/volunteerType";
+import { ReligionDropdownTypes } from "@/types/religion";
 
 const formSchema = z.object({
   volunteer_id: z.string().min(10).max(20),
@@ -59,63 +66,6 @@ const formSchema = z.object({
   isOfficer: z.boolean(),
 });
 
-interface educationList {
-  id: string;
-  education: string;
-}
-
-interface occupationList {
-  id: string;
-  occupation: string;
-}
-
-interface positionList {
-  id: string;
-  position: string;
-}
-
-interface unitList {
-  id: string;
-  name: string;
-}
-
-interface volunteerTypeList {
-  id: string;
-  volunteer_type: string;
-}
-
-interface religionList {
-  id: string;
-  religion: string;
-}
-
-type Gender = "M" | "F";
-type BloodType = "A" | "B" | "AB" | "O" | "Unknown";
-type Status = "active" | "inactive";
-
-interface VolunteerData {
-  volunteer_id: string;
-  volunteer_type_id: string;
-  unit_id: string;
-  religion_id: string;
-  education_id: string;
-  occupation_id: string;
-  position_id: string;
-  name: string;
-  born_place: string;
-  birth_date: Date;
-  gender: Gender;
-  blood_type: BloodType;
-  address: string;
-  phone: string;
-  email: string;
-  join_date: Date;
-  photo?: string;
-  period?: string | undefined;
-  isOfficer: boolean;
-  status: Status;
-}
-
 const UpdateVolunteerForm = ({
   initialValues,
   educationList,
@@ -125,13 +75,13 @@ const UpdateVolunteerForm = ({
   volunteerTypeList,
   religionList,
 }: {
-  initialValues: VolunteerData;
-  educationList: educationList[];
-  occupationList: occupationList[];
-  positionList: positionList[];
-  unitList: unitList[];
-  volunteerTypeList: volunteerTypeList[];
-  religionList: religionList[];
+  initialValues: VolunteerDataTypes;
+  educationList: EducationDropdownTypes[];
+  occupationList: OccupationDropdownTypes[];
+  positionList: positionDropdownTypes[];
+  unitList: UnitDropdownTypes[];
+  volunteerTypeList: VolunteerTypesDropdownTypes[];
+  religionList: ReligionDropdownTypes[];
 }) => {
   const { toast } = useToast();
   const router = useRouter();
@@ -170,7 +120,7 @@ const UpdateVolunteerForm = ({
       join_date: values.join_date,
       period: values.period,
       isOfficer: values.isOfficer,
-    } as VolunteerData;
+    } as VolunteerDataTypes;
     await UpdateVolunteer({ id, data: toBeSubmitted })
       .then((res) => {
         if (res.success) {

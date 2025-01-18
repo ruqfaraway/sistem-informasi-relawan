@@ -10,6 +10,7 @@ import {
   getDataUnit,
   getDataVolunteerType,
 } from "../../actions";
+import apiHandler from "@/lib/apiHandler";
 
 const DetailPage = async ({
   params,
@@ -19,38 +20,18 @@ const DetailPage = async ({
   };
 }) => {
   const data = await getDetailVolunteerData(params.id);
-  const initialValues = {
-    volunteer_id: data.volunteer_id,
-    volunteer_type_id: data.volunteer_type_id,
-    unit_id: data.unit_id,
-    religion_id: data.religion_id,
-    education_id: data.education_id,
-    occupation_id: data.occupation_id,
-    position_id: data.position_id,
-    name: data.name,
-    born_place: data.born_place,
-    birth_date: data.birth_date,
-    gender: data.gender,
-    blood_type: data.blood_type,
-    address: data.address,
-    phone: data.phone,
-    email: data.email,
-    join_date: data.join_date,
-    period: data?.period ?? undefined,
-    status: data.status,
-    isOfficer: data.isOfficer,
-  };
   const { data: educationList } = await getDataEducation();
   const { data: occupationList } = await getDataOccupation();
   const { data: positionList } = await getDataPosition();
   const { data: unitList } = await getDataUnit();
   const { data: volunteerTypeList } = await getDataVolunteerType();
   const { data: religionList } = await getDataReligion();
+
+  const { data: volunteerDetail } = await getDetailVolunteer(params.id);
   return (
     <>
-      <div>DetailPage</div>
       <UpdateVolunteerForm
-        initialValues={initialValues}
+        initialValues={volunteerDetail}
         educationList={educationList}
         occupationList={occupationList}
         positionList={positionList}
@@ -63,3 +44,17 @@ const DetailPage = async ({
 };
 
 export default DetailPage;
+
+const getDetailVolunteer = async (id: string) => {
+  return apiHandler
+    .request({
+      url: `/api/admin/volunteer/detail/${id}`,
+      method: "GET",
+    })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error;
+    });
+};

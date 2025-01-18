@@ -3,15 +3,13 @@ import React from "react";
 import VolunteerPage from "./comp/VolunteerPage";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { getDataVolunteer, getDataVolunteerAdminPagination } from "./actions";
+import { getDataVolunteerAdminPagination } from "./actions";
+import apiHandler from "@/lib/apiHandler";
 
 const page = async ({
   searchParams,
 }: {
-  searchParams: {
-    page: number;
-    perPage: number;
-  };
+  searchParams: { page?: string; name?: string };
 }) => {
   const session = await getSession();
   if (!session) {
@@ -20,21 +18,53 @@ const page = async ({
   if (!session.superAdmin) {
     redirect("/user-dashboard");
   }
-  const { data } = await getDataVolunteer();
 
-  const page = Number(searchParams?.page) || 1;
-  const perPage = Number(searchParams?.perPage) || 10;
+  // const page = Number(searchParams?.page) || 1;
+  // const perPage = Number(searchParams?.perPage) || 10;
 
-  const { data: list } = await getDataVolunteerAdminPagination({
-    page,
-    perPage,
-  });
+  // const { data: list } = await getDataVolunteerAdminPagination({
+  //   page,
+  //   perPage,
+  // });
+
+  const page = parseInt(searchParams.page ?? "1", 10); // Default to page 1
+  const query = searchParams.name ?? ""; // Default to empty query
+  const listUnit = await getListVolunteer({ page, query });
+  if (!listUnit) {
+    return <div>Error fetching data</div>;
+  }
+  const { data, metadata } = listUnit;
+ 
 
   return (
     <>
-      <VolunteerPage dataSource={list} />
+      <VolunteerPage dataSource={data} query={metadata} />
     </>
   );
 };
 
 export default page;
+
+const getListVolunteer = async ({
+  page = 1,
+  query = "",
+}: {
+  page?: number;
+  query?: string;
+}) => {
+  return apiHandler
+    .request({
+      method: "GET",
+      url: "/api/admin/volunteer/list",
+      params: {
+        page,
+        query,
+      },
+    })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error;
+    });
+};

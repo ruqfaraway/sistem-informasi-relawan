@@ -36,15 +36,13 @@ import {
 } from "@/components/ui/card";
 import { NewDatePicker } from "@/components/NewDatePicker/NewDatePicker";
 import { createVolunteer } from "../actions";
-import {
-  educationList,
-  occupationList,
-  positionList,
-  religionList,
-  unitList,
-  VolunteerData,
-  volunteerTypeList,
-} from "../types/volunteer.type";
+import { EducationDropdownTypes } from "@/types/education";
+import { OccupationDropdownTypes } from "@/types/occupation";
+import { positionDropdownTypes } from "@/types/position";
+import { UnitDropdownTypes } from "@/types/unit";
+import { VolunteerTypesDropdownTypes } from "@/types/volunteerType";
+import { ReligionDropdownTypes } from "@/types/religion";
+import { VolunteerDataTypes } from "@/types/volunteer";
 
 const formSchema = z.object({
   volunteer_id: z.string().min(10).max(20),
@@ -76,12 +74,12 @@ const AddVolunteerForm = ({
   volunteerTypeList,
   religionList,
 }: {
-  educationList: educationList[];
-  occupationList: occupationList[];
-  positionList: positionList[];
-  unitList: unitList[];
-  volunteerTypeList: volunteerTypeList[];
-  religionList: religionList[];
+  educationList: EducationDropdownTypes[];
+  occupationList: OccupationDropdownTypes[];
+  positionList: positionDropdownTypes[];
+  unitList: UnitDropdownTypes[];
+  volunteerTypeList: VolunteerTypesDropdownTypes[];
+  religionList: ReligionDropdownTypes[];
 }) => {
   const { toast } = useToast();
   const router = useRouter();
@@ -118,7 +116,7 @@ const AddVolunteerForm = ({
       join_date: values.join_date,
       period: values.period,
       isOfficer: values.isOfficer,
-    } as VolunteerData;
+    } as VolunteerDataTypes;
     await createVolunteer({ data: toBeSubmitted })
       .then((res) => {
         if (res.success) {

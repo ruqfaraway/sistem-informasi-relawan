@@ -3,10 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import DeleteButton from "./DeleteButton";
 import { VolunteersType } from "../types/volunteer.type";
+import { DeleteButton } from "@/components/Admin";
+import { useState } from "react";
 
-export const columns: ColumnDef<VolunteersType>[] = [
+export const Columns: ColumnDef<VolunteersType>[] = [
   {
     accessorKey: "no",
     header: "No",
@@ -31,15 +32,32 @@ export const columns: ColumnDef<VolunteersType>[] = [
     header: "Pekerjaan",
   },
   {
+    accessorKey: "gender",
+    header: "Jenis Kelamin"
+  },
+  {
     accessorKey: "action",
     header: "Action",
-    cell: ({ row }) => {
+    cell: function Cell({ row }) {
+      const [loading, setLoading] = useState(false);
+      const handleDelete = (id: string) => {
+        console.log(id);
+        setLoading(true);
+
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
+      };
       return (
         <div className="flex justify-center space-x-4">
           <Link href={`/volunteer-management/detail/${row.original.id}`}>
             <Button>Edit</Button>
           </Link>
-          <DeleteButton id={row.original.id} />
+          <DeleteButton
+            handleDelete={handleDelete}
+            loading={loading}
+            id={row.original.id}
+          />
         </div>
       );
     },

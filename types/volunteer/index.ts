@@ -3,7 +3,8 @@ type BloodType = "A" | "B" | "AB" | "O" | "Unknown";
 type Status = "active" | "inactive";
 
 export type VolunteerDataTypes = {
- volunteer_id: string;
+  id: string;
+  volunteer_id: string;
   volunteer_type_id: string;
   unit_id: string;
   religion_id: string;

@@ -5,8 +5,6 @@ import { ValidateEmail } from "@/lib/validate-email";
 import { loginPost } from "@/model/user.data";
 import { redirect } from "next/navigation";
 
-
-
 interface login {
  email: string;
  password: string;

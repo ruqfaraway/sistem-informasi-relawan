@@ -14,8 +14,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PostEducation } from "../actions";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
+import { CreateEducation } from "../actions";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -29,6 +32,7 @@ const formSchema = z.object({
 });
 
 const AddEducationForm = () => {
+  const { toast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   // 1. Define your form.
@@ -46,21 +50,24 @@ const AddEducationForm = () => {
       name: values.name,
       code: values.code.toLowerCase(),
     };
-
     setLoading(true);
-    await PostEducation(toBeSubmitted)
-      .then((res) => {
-        if (res.success) {
-          form.reset();
-        }
+    try {
+      const res = await CreateEducation(toBeSubmitted);
+      if (res.success) {
+        toast({
+          title: "Success!",
+          description: res.message,
+        });
         router.push("/education");
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setLoading(false);
+      }
+    } catch (error) {
+      toast({
+        title: "Error create",
+        description: "Gagal membuat pendidikan!",
       });
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <Form {...form}>
@@ -94,8 +101,18 @@ const AddEducationForm = () => {
             </FormItem>
           )}
         />
-        {loading && <div>Loading...</div>}
-        <Button type="submit">Submit</Button>
+        <div className="flex gap-4 justify-end w-full">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => router.push("/education")}
+          >
+            Cancel
+          </Button>
+          <Button type="submit">
+            {loading ? <Loader2 className="animate-spin" /> : "Submit"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

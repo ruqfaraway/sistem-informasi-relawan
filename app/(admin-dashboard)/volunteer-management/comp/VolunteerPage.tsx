@@ -3,7 +3,6 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { VolunteersType } from "../types/volunteer.type";
 import {
   Form,
   FormControl,
@@ -15,12 +14,13 @@ import { SearchIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { DataTable } from "@/components/MainTable/MainTable";
 import { Columns } from "./columns";
+import { VolunteerDataTypes } from "@/types/volunteer";
 
 const VolunteerPage = ({
   dataSource,
   query,
 }: {
-  dataSource: VolunteersType[];
+  dataSource: VolunteerDataTypes[];
   query: {
     page: number;
     perPage: number;

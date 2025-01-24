@@ -1,7 +1,7 @@
 import { getIronSession, SessionOptions } from "iron-session";
 import { cookies } from "next/headers";
 
-export interface SessionData {
+export type SessionData = {
   user_id?: string;
   name?: string | null;
   email?: string;
@@ -23,12 +23,13 @@ export const sessionOptions: SessionOptions = {
   cookieOptions: {
     httpOnly: true,
     // Secure only works in `https` environments. So if the environment is `https`, it'll return true.
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
   },
 };
 
 export async function getSession() {
   const session = await getIronSession<SessionData>(cookies(), sessionOptions);
+  // console.log(session, 'session dari session')
   // If user visits for the first time session returns an empty object.
   // Let's add the isLoggedIn property to this object and its value will be the default value which is false
   if (!session.isLoggedIn) {

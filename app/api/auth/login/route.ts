@@ -46,14 +46,11 @@ export const POST = async (req: NextRequest) => {
   await session.save();
 
   return NextResponse.json({
-   user: {
-    id: user.id,
-    email: user.email,
-   },
-   unit: {
-    id: unit?.id,
-    name: unit?.name,
-   },
+   success: true,
+   message: "Login successful",
+   data: {
+    ...session,
+   }
   });
  } catch (error) {
   console.error("Error in GET request:", error);

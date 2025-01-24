@@ -1,15 +1,16 @@
 "use server";
 import { getSession } from "@/lib/session";
-import { getPaginationEducation } from "./actions";
 import EducationPage from "./comp/EducationPage";
 import { redirect } from "next/navigation";
+import apiHandler from "@/lib/apiHandler";
+import { revalidatePath } from "next/cache";
 
 const Page = async ({
   searchParams,
 }: {
   searchParams: {
-    page: number;
-    perPage: number;
+    page?: number;
+    name?: string;
   };
 }) => {
   const session = await getSession();
@@ -20,14 +21,48 @@ const Page = async ({
     redirect("/user-dashboard");
   }
   const page = Number(searchParams?.page) || 1;
-  const per_page = Number(searchParams?.perPage) || 10;
+  const query = searchParams.name ?? "";
 
-  const { data: list } = await getPaginationEducation(page, per_page);
+  const result = await getListEducation({
+    page,
+    query,
+  });
+  if (!result) {
+    return <div>Error fetching data</div>;
+  }
+  const { data, metadata } = result;
   return (
     <>
-      <EducationPage dataSource={list} />
+      <EducationPage dataSource={data} query={metadata} />
     </>
   );
 };
 
 export default Page;
+
+const getListEducation = async ({
+  page = 1,
+  query = "",
+}: {
+  page?: number;
+  query?: string;
+}) => {
+  return apiHandler
+    .request({
+      method: "GET",
+      url: "/api/admin/education/list",
+      params: {
+        page,
+        query,
+      },
+    })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error;
+    })
+    .finally(() => {
+      revalidatePath("/education");
+    });
+};

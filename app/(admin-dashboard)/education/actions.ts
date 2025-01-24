@@ -1,65 +1,33 @@
 'use server'
+import apiHandler from "@/lib/apiHandler";
 import { ActionResponseType } from "@/lib/definitions";
 import { getSession } from "@/lib/session";
-import { createEducation, deleteEducationData, getDetailEducationData, getEducationData, getEducationPaginate, updateEducationData } from "@/model/education.data";
+import { createEducation, getDetailEducationData, getEducationData, updateEducationData } from "@/model/education.data";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 interface education {
  name: string;
  code: string;
 }
 
-export const getPaginationEducation = async (page: number, perPage: number): Promise<ActionResponseType> => {
- const session = await getSession();
+
+
+export const CreateEducation = async (data: education) => {
  try {
-  if (session.superAdmin === true) {
-   const data = await getEducationPaginate(
-    page,
-    perPage,
-   );
-   return {
-    success: true,
-    message: "success get data",
-    data,
-   };
-  }
-  return {
-   success: false,
-   message: "You are not authorized",
+  const res = await apiHandler.request({
+   method: 'POST',
+   url: '/api/admin/education/add',
+   data: data
+  })
+  if (res.status === 200) {
+   revalidatePath("/education")
   };
+  return res.data
  } catch (error) {
-  return {
-   success: false,
-   message: error instanceof Error ? error.message : "Something went wrong",
-  }
+  return error
  }
 }
-
-export const PostEducation = async (data: education): Promise<ActionResponseType> => {
- const session = await getSession();
- try {
-  if (session.superAdmin === true) {
-   await createEducation({
-    name: data.name,
-    code: data.code,
-   });
-   revalidatePath("/question");
-   return {
-    success: true,
-    message: "success create data",
-   };
-  }
-  return {
-   success: false,
-   message: "You are not authorized",
-  };
- } catch (error) {
-  return {
-   success: false,
-   message: error instanceof Error ? error.message : "Something went wrong",
-  }
- }
-};
 
 export const getDataEducation = async (): Promise<ActionResponseType> => {
  const session = await getSession();
@@ -136,25 +104,18 @@ export const UpdateEducation = async (id: string, data: education): Promise<Acti
  }
 }
 
-export const DeleteEducation = async (id: string): Promise<ActionResponseType> => {
- const session = await getSession();
+export const DeleteEducation = async (id: string) => {
  try {
-  if (session.superAdmin === true) {
-   await deleteEducationData(id);
-   revalidatePath("/education");
-   return {
-    success: true,
-    message: "success delete data",
-   };
+  const res = await apiHandler.request({
+   method: "DELETE",
+   url: `/api/admin/education/delete/`,
+   data: { id },
+  })
+  if (res.status === 200) {
+   revalidatePath("/education")
   }
-  return {
-   success: false,
-   message: "You are not authorized",
-  };
+  return res.data
  } catch (error) {
-  return {
-   success: false,
-   message: error instanceof Error ? error.message : "Something went wrong",
-  }
+  return error
  }
 }

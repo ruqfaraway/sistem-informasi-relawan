@@ -6,27 +6,6 @@ interface education {
  code: string;
 }
 
-export const getEducationPaginate = async (page: number, perPage: number) => {
- const data = await prisma.educationLevel.findMany({
-  skip: (page - 1) * perPage,
-  take: perPage,
- });
- const total = await prisma.educationLevel.count();
- const datas = data.map((d) => {
-  return {
-   id: d.id,
-   education: d.education,
-   code: d.code,
-  };
- });
- return {
-  data: datas, metadata: {
-   page,
-   perPage,
-   total
-  }
- };
-};
 // get all
 
 export const getEducationData = async () => {

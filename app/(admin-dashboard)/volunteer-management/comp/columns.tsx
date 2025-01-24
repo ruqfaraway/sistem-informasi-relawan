@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
-import { VolunteersType } from "../types/volunteer.type";
 import { DeleteButton } from "@/components/Admin";
 import { useState } from "react";
+import { VolunteerDataTypes } from "@/types/volunteer";
 
-export const Columns: ColumnDef<VolunteersType>[] = [
+export const Columns: ColumnDef<VolunteerDataTypes>[] = [
   {
     accessorKey: "no",
     header: "No",

@@ -23,6 +23,7 @@ import {
 import { Loader2, LockIcon, MailIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import apiHandler from "@/lib/apiHandler";
 
 export function FormLogin() {
   const { toast } = useToast();
@@ -39,38 +40,31 @@ export function FormLogin() {
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     setLoading(true);
-    await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then(async (res) => {
-        const response = await res.json();
-        if (res.ok) {
+    await apiHandler
+      .request({
+        url: "/api/auth/login",
+        method: "POST",
+        data: data,
+      })
+      .then((res) => {
+        if ([200].includes(res.status)) {
           toast({
             title: "Login Success",
-            description: "You have successfully logged in",
+            description: "Welcome back",
           });
-          setLoading(false);
-          router.push("/");
-          return response;
-        } else {
-          toast({
-            title: "Login Failed",
-            description: response.error,
-          });
-          setLoading(false);
         }
+        router.refresh();
       })
       .catch((error) => {
+        console.log(error);
         toast({
           title: "Login Failed",
-          description: error.message,
+          description: error.response.data.error,
         });
         setLoading(false);
-      });
+      }).finally(()=> {
+        setLoading(false);
+      })
   };
 
   const form = useForm<z.infer<typeof FormSchema>>({

@@ -15,7 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { UpdateEducation } from "../../actions";
+import apiHandler from "@/lib/apiHandler";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -36,6 +37,7 @@ const UpdateEducationForm = ({
     code: string;
   };
 }) => {
+  const { toast } = useToast();
   const router = useRouter();
   const params = useParams();
   const [loading, setLoading] = useState(false);
@@ -52,18 +54,26 @@ const UpdateEducationForm = ({
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    await UpdateEducation(id, {
-      name: values.name,
-      code: values.code.toLowerCase(),
-    })
+    await apiHandler
+      .request({
+        method: "PATCH",
+        url: `/api/admin/education/detail/${id}`,
+        data: values,
+      })
       .then((res) => {
-        if (res.success) {
-          form.reset();
+        if ([200, 201].includes(res.status)) {
+          toast({
+            title: "Education Updated",
+            description: "Education  was updated successfully",
+          });
+          router.push("/education");
         }
-        router.push("/education");
       })
       .catch((error) => {
-        console.log(error, "error");
+        toast({
+          title: "Error",
+          description: "Error in updating education",
+        });
       })
       .finally(() => {
         setLoading(false);

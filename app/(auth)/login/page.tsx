@@ -7,7 +7,7 @@ export default async function Page() {
   const session = await getSession();
   if (session.isLoggedIn) {
     if (session.superAdmin) {
-      redirect("/");
+      redirect("/dashboard");
     } else {
       redirect("/user-dashboard");
     }

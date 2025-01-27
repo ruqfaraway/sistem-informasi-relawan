@@ -18,17 +18,18 @@ import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NewDatePicker } from "@/components/NewDatePicker/NewDatePicker";
 import { createVolunteerUnit } from "../actions";
+import apiHandler from "@/lib/apiHandler";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
-  builder: z
-    .string()
-    .min(2, { message: "Code must be at least 2 characters." })
-    .max(50),
+  builder: z.string().min(2).max(50),
   birth_date: z.date(),
-  email: z.string().email(),
   address: z.string().min(2).max(250),
-  phone: z.string().min(2).max(50)
+  phone: z.string().min(2).max(50),
+  website: z.string().min(2).max(50),
+  instagram: z.string().min(2).max(50),
+  unit_number: z.string().min(2).max(50),
+  email: z.string().email(),
 });
 
 const AddUnitVolunteer = () => {
@@ -46,21 +47,25 @@ const AddUnitVolunteer = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    await createVolunteerUnit(values)
+    await apiHandler
+      .request({
+        url: "/api/admin/unit/create",
+        method: "POST",
+        data: values,
+      })
       .then((res) => {
-        if (res.success) {
+        if ([200, 201].includes(res.status)) {
           router.push("/unit");
           toast({
-            title: "Unit Volunteer & User Added",
-            description:
-              "Unit Volunteer and new account has been added successfully",
+            title: "Unit Created",
+            description: "Unit Volunteer was created successfully",
           });
         }
       })
-      .catch((err) => {
+      .catch((error) => {
         toast({
           title: "Error",
-          description: err.message,
+          description: error.response.data.message,
         });
       })
       .finally(() => {
@@ -76,9 +81,22 @@ const AddUnitVolunteer = () => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name :</FormLabel>
+                <FormLabel>Nama :</FormLabel>
                 <FormControl>
-                  <Input placeholder="Name" {...field} />
+                  <Input placeholder="Nama" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="unit_number"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>No SK :</FormLabel>
+                <FormControl>
+                  <Input placeholder="no SK Unit" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -89,35 +107,35 @@ const AddUnitVolunteer = () => {
             name="builder"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Builder :</FormLabel>
+                <FormLabel>Pembina :</FormLabel>
                 <FormControl>
-                  <Input placeholder="Builder" {...field} />
+                  <Input placeholder="Pembina" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-           <FormField
+          <FormField
             control={form.control}
             name="address"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Address :</FormLabel>
+                <FormLabel>Alamat :</FormLabel>
                 <FormControl>
-                  <Input placeholder="Address" {...field} />
+                  <Input placeholder="Alamat" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-           <FormField
+          <FormField
             control={form.control}
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone :</FormLabel>
+                <FormLabel>No Hp :</FormLabel>
                 <FormControl>
-                  <Input placeholder="Phone" {...field} />
+                  <Input placeholder="No Hp" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -138,6 +156,32 @@ const AddUnitVolunteer = () => {
           />
           <FormField
             control={form.control}
+            name="website"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Website :</FormLabel>
+                <FormControl>
+                  <Input placeholder="website" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="instagram"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Instagram :</FormLabel>
+                <FormControl>
+                  <Input placeholder="instagram" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="birth_date"
             render={({ field }) => (
               <FormItem className="flex flex-col gap-2">
@@ -149,9 +193,18 @@ const AddUnitVolunteer = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">
-            {loading ? <Loader2 className="animate-spin" /> : "Submit"}
-          </Button>
+          <div className="flex justify-end space-x-4">
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => router.push("/unit")}
+            >
+              Cancel
+            </Button>
+            <Button type="submit">
+              {loading ? <Loader2 className="animate-spin" /> : "Submit"}
+            </Button>
+          </div>
         </form>
       </Form>
     </>

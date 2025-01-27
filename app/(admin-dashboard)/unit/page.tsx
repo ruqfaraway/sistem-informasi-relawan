@@ -3,6 +3,7 @@ import { getSession } from "@/lib/session";
 import UnitVolunteerPage from "./comp/UnitVolunteerPage";
 import { redirect } from "next/navigation";
 import apiHandler from "@/lib/apiHandler";
+import { revalidatePath } from "next/cache";
 
 const page = async ({
   searchParams,
@@ -49,5 +50,7 @@ const getListUnit = async ({
     })
     .catch((error) => {
       return error;
+    }).finally(() => {
+      revalidatePath("/unit");
     });
 };

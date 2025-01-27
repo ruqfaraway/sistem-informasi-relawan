@@ -98,9 +98,9 @@ const UpdateUnitVolunteer = ({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name :</FormLabel>
+                <FormLabel>Nama :</FormLabel>
                 <FormControl>
-                  <Input placeholder="Name" {...field} />
+                  <Input placeholder="Nama" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -124,9 +124,9 @@ const UpdateUnitVolunteer = ({
             name="builder"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Builder :</FormLabel>
+                <FormLabel>Pembina :</FormLabel>
                 <FormControl>
-                  <Input placeholder="Builder" {...field} />
+                  <Input placeholder="Pembina" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -137,9 +137,9 @@ const UpdateUnitVolunteer = ({
             name="address"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Address :</FormLabel>
+                <FormLabel>Alamat :</FormLabel>
                 <FormControl>
-                  <Input placeholder="Address" {...field} />
+                  <Input placeholder="Alamat" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -150,9 +150,9 @@ const UpdateUnitVolunteer = ({
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone :</FormLabel>
+                <FormLabel>No Hp :</FormLabel>
                 <FormControl>
-                  <Input placeholder="Phone" {...field} />
+                  <Input placeholder="No Hp" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -184,7 +184,6 @@ const UpdateUnitVolunteer = ({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="birth_date"

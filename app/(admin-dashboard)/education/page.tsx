@@ -26,14 +26,22 @@ const Page = async ({
   const result = await getListEducation({
     page,
     query,
+  }).catch((error) => {
+    console.error("Error in get list education:", error);
+    return null;
   });
+
   if (!result) {
     return <div>Error fetching data</div>;
   }
   const { data, metadata } = result;
   return (
     <>
-      <EducationPage dataSource={data} query={metadata} />
+      {result ? (
+        <EducationPage dataSource={data} query={metadata} />
+      ) : (
+        <div>Error fetching data</div>
+      )}
     </>
   );
 };
@@ -60,7 +68,7 @@ const getListEducation = async ({
       return res.data;
     })
     .catch((error) => {
-      return error;
+      throw error;
     })
     .finally(() => {
       revalidatePath("/education");

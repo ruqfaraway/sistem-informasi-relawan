@@ -26,7 +26,7 @@ export const createVolunteerUnit = async (data: volunteerUnit): Promise<ActionRe
     address: "address",
     phone: "phone",
    });
-   revalidatePath("/question");
+   revalidatePath("/unit");
    return {
     success: true,
     message: "success create data",

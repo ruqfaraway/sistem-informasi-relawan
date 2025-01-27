@@ -7,7 +7,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { useState } from "react";
 import { DeleteEducation } from "../actions";
-import { revalidatePath } from "next/cache";
+import { useRouter } from "next/navigation";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -26,6 +26,10 @@ export const EducationColumns: ColumnDef<Education>[] = [
     },
   },
   {
+    accessorKey: "code",
+    header: "Code",
+  },
+  {
     accessorKey: "name",
     header: "Name",
   },
@@ -35,15 +39,20 @@ export const EducationColumns: ColumnDef<Education>[] = [
     cell: function Cell({ row }) {
       const [loading, setLoading] = useState(false);
       const { toast } = useToast();
+      const router = useRouter();
       const handleDelete = async (id: string) => {
         setLoading(true);
         try {
-          const res = await DeleteEducation(id);
-          if (res.success) {
+          const res = await apiHandler.request({
+            method: "DELETE",
+            url: `/api/admin/education/delete`,
+            data: { id },
+          });
+          if ([200, 201].includes(res.status)) {
             setLoading(false);
             toast({
               title: "Success",
-              description: res.message,
+              description: res.data.message,
             });
           }
         } catch (error) {
@@ -52,6 +61,9 @@ export const EducationColumns: ColumnDef<Education>[] = [
             title: "Error",
             description: "Error ini bang",
           });
+        } finally {
+          setLoading(false);
+          router.refresh();
         }
       };
       return (

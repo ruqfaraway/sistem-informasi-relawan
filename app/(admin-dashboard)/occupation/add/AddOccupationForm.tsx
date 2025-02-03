@@ -18,6 +18,7 @@ import { createOccupation } from "../actions";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import apiHandler from "@/lib/apiHandler";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -50,25 +51,28 @@ const AddOccupationForm = () => {
       code: values.code.toLowerCase(),
     };
     setLoading(true);
-    await createOccupation(toBeSubmitted)
+    await apiHandler
+      .request({
+        method: "POST",
+        url: "/api/admin/occupation/add",
+        data: toBeSubmitted,
+      })
       .then((res) => {
-        if (res.success === true) {
-          form.reset();
+        if ([200, 201].includes(res.status)) {
+          setLoading(false);
           toast({
             title: "Success",
-            description: "Occupation added successfully",
+            description: res.data.message,
           });
           router.push("/occupation");
         }
       })
-      .catch((error) => {
+      .catch((err) => {
+        setLoading(false);
         toast({
           title: "Error",
-          description: error.message,
+          description: err.response.data.message,
         });
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
   return (
@@ -103,9 +107,18 @@ const AddOccupationForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">
-          {loading ? <Loader2 className="animate-spin" /> : "Submit"}
-        </Button>
+        <div className="flex gap-4 justify-end w-full">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => router.push("/occupation")}
+          >
+            Cancel
+          </Button>
+          <Button type="submit">
+            {loading ? <Loader2 className="animate-spin" /> : "Submit"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

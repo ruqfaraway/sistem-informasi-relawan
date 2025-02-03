@@ -3,8 +3,8 @@ import React from "react";
 import VolunteerPage from "./comp/VolunteerPage";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { getDataVolunteerAdminPagination } from "./actions";
 import apiHandler from "@/lib/apiHandler";
+import { revalidatePath } from "next/cache";
 
 const page = async ({
   searchParams,
@@ -34,7 +34,6 @@ const page = async ({
     return <div>Error fetching data</div>;
   }
   const { data, metadata } = listUnit;
- 
 
   return (
     <>
@@ -66,5 +65,8 @@ const getListVolunteer = async ({
     })
     .catch((error) => {
       return error;
+    })
+    .finally(() => {
+      revalidatePath("/volunteer-management");
     });
 };

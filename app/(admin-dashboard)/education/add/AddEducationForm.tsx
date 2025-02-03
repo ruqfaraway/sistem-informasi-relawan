@@ -17,8 +17,8 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
-import { CreateEducation } from "../actions";
 import { Loader2 } from "lucide-react";
+import apiHandler from "@/lib/apiHandler";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -51,23 +51,31 @@ const AddEducationForm = () => {
       code: values.code.toLowerCase(),
     };
     setLoading(true);
-    try {
-      const res = await CreateEducation(toBeSubmitted);
-      if (res.success) {
+    await apiHandler
+      .request({
+        method: "POST",
+        url: "/api/admin/education/add",
+        data: toBeSubmitted,
+      })
+      .then((res) => {
+        if ([200, 201].includes(res.status)) {
+          setLoading(false);
+          toast({
+            title: "Success",
+            description: res.data.message,
+          });
+          router.push("/education");
+        }
+      })
+      .catch((error) => {
         toast({
-          title: "Success!",
-          description: res.message,
+          title: "Error",
+          description: error.response.data.message,
         });
-        router.push("/education");
-      }
-    } catch (error) {
-      toast({
-        title: "Error create",
-        description: "Gagal membuat pendidikan!",
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    } finally {
-      setLoading(false);
-    }
   };
   return (
     <Form {...form}>

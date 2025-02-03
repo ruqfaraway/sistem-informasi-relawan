@@ -17,6 +17,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { UpdateOccupation } from "../../actions";
 import { useToast } from "@/hooks/use-toast";
+import apiHandler from "@/lib/apiHandler";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -54,19 +56,20 @@ const UpdateOccupationForm = ({
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    await UpdateOccupation(id, {
-      name: values.name,
-      code: values.code.toLowerCase(),
-    })
+    await apiHandler
+      .request({
+        method: "PATCH",
+        url: `/api/admin/occupation/detail/${id}`,
+        data: values,
+      })
       .then((res) => {
-        if (res.success) {
-          form.reset();
+        if ([200, 201].includes(res.status)) {
           toast({
-            title: "Success",
-            description: "Occupation updated successfully.",
+            title: "Occupation Updated",
+            description: "Occupation  was updated successfully",
           });
+          router.push("/occupation");
         }
-        router.push("/occupation");
       })
       .catch((error) => {
         toast({
@@ -110,10 +113,18 @@ const UpdateOccupationForm = ({
             </FormItem>
           )}
         />
-        {/* {loading && <div>Loading...</div>} */}
-        <Button type="submit" disabled={loading}>
-          {loading ? "Loading..." : "Submit"}
-        </Button>
+        <div className="flex gap-4 justify-end w-full">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => router.push("/occupation")}
+          >
+            Cancel
+          </Button>
+          <Button type="submit">
+            {loading ? <Loader2 className="animate-spin" /> : "Submit"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

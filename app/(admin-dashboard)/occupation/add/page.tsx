@@ -4,7 +4,7 @@ import AddEducationForm from "./AddOccupationForm";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
-const AddEducationPage = async () => {
+const AddOccupationPage = async () => {
   const session = await getSession();
   if (!session) {
     redirect("/login");
@@ -17,4 +17,4 @@ const AddEducationPage = async () => {
   );
 };
 
-export default AddEducationPage;
+export default AddOccupationPage;
